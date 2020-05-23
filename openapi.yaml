@@ -1,0 +1,189 @@
+openapi: 3.0.0
+info:
+  title: MTN Mobile Money REST API
+  version: 0.0.1
+paths:
+  /claim/{id}:
+    post:
+      summary: This operation is used to post a claim for a costumer
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: String uuid of the claimed costumer
+      responses:
+        '202':
+          description: request accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  amount:
+                    type: integer
+                  # customer_account_number:
+                  #   type: integer
+                  #   description: customer (Payer) account holder number
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    head:
+      summary: This operation is used to observe payment status periodically by customer id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: String uuid of the claimed costumer
+      responses:
+        '102':
+          description: pending
+        '200':
+          description: accepted
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '402':
+          description: rejected
+        '404':
+          description: not found
+        '500':
+          description: internal server error
+    put:
+      summary: Put resolved claim by customer
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: String uuid of the claimed costumer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  amount:
+                    type: integer
+                  # customer_account_number:
+                  #   type: integer
+                  #   description: customer (Payer) account holder number
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '404':
+          description: rejected
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /dashboard/{id}:
+    get:
+      summary: Requests payments by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: String uuid of the claimed costumer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  sum_amount:
+                    type: integer
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: string
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
