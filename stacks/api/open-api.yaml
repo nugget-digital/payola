@@ -1,0 +1,148 @@
+openapi: 3.0.0
+info:
+  title: Fuel0
+  version: 0.0.1
+
+paths:
+  /claim/{id}:
+    post:
+      summary: create a claim
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          required: true
+          description: uuid for the claim to be created
+      responses:
+        202:
+          description: request accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Uuid"
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        500:
+          description: internal server error
+    head:
+      summary: get the status of a particular claim
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          required: true
+          description: uuid of the claim
+      responses:
+        102:
+          description: pending
+        200:
+          description: accepted
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        402:
+          description: payment required
+        404:
+          description: not found
+        500:
+          description: internal server error
+    put:
+      summary: store a claim
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          required: true
+          description: uuid of the claim
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Claim"
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        404:
+          description: not found
+        500:
+          description: internal server error
+  /gas-provider/balance/{id}:
+    get:
+      summary: get the balance of the gas provider
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          required: true
+          description: uuid of the gas provider
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Balance"
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        500:
+          description: internal server error
+  /config/:
+    get:
+      summary: get the configuration update
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration"
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        404:
+          description: not found
+        500:
+          description: internal server error
+
+components:
+  schemas:
+    Uuid:
+      type: string
+      pattern: "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89AB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
+    Claim:
+      type: object
+      properties:
+        mobileNumber:
+          type: string
+          pattern: "^23[34]{1}[1-9]{2}[0-9]{6,7}$"
+        amount:
+          type: number
+    Balance:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/Uuid"
+        balance:
+          type: number
+    Configuration:
+      type: object
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
+security:
+  - basicAuth: []
