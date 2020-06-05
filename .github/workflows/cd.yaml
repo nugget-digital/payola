@@ -5,7 +5,7 @@ on:
       - master
       - open-api-spec
     paths:
-      - ./stacks/api/open-api.yaml
+      - /stacks/api/open-api.yaml
       - cd.yaml
 
 jobs:
