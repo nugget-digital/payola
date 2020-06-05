@@ -4,8 +4,8 @@ on:
     branches:
       - master
       - open-api-spec
-    - paths:
-      - open-api.yaml
+    paths:
+      - ./stacks/api/open-api.yaml
       - cd.yaml
 
 jobs:
