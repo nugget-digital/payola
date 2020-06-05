@@ -4,7 +4,7 @@ on:
     branches:
       - master
       - open-api-spec
-    paths:
+    - paths:
       - open-api.yaml
       - cd.yaml
 
