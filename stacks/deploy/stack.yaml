@@ -13,6 +13,30 @@ Metadata:
         Parameters:
           - SiteBucketName
 
+Parameters:
+  # Domain:
+  #   Description: Route53 domain fx example.com
+  #   Type: String
+  # HostedZoneId:
+  #   Description: Route53 hosted zone id
+  #   Type: AWS::Route53::HostedZone::Id
+  DefaultTTL:
+    Description: Default cache object TTL - default 1h
+    Type: Number
+    Default: 3600
+  MaxTTL:
+    Description: Maximum cache object TTL - default 2h
+    Type: Number
+    Default: 7200
+  MinTTL:
+    Description: Minimum cache object TTL - default 1/2h
+    Type: Number
+    Default: 1800
+  DefaultRootObject:
+    Description: Default root object path used by the CloudFront distribution
+    Type: String
+    Default: index.html
+
 Resources:
   User:
     Type: AWS::IAM::User
