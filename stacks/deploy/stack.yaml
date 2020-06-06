@@ -4,8 +4,7 @@ Description: |
   stacks. this template's outputs provide the aws credentials that are
   prerequisites for performing the stack updates. Make sure to manually
   deploy this stack to the test and prod account, then set the github secrets
-  AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-  given the corresponding stack outputs.
+  AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY given the corresponding stack outputs.
 Metadata:
   "AWS::CloudFormation::Interface":
     ParameterGroups:
@@ -28,7 +27,7 @@ Resources:
                 Action:
                   - s3:GetObject
                   - s3:PutObject
-                Resource: !Sub arn:aws:s3:::fuel0_user_bucket
+                Resource: !Sub arn:aws:s3:::{SiteBucketName}/*
 
               - Sid: AllowLambdaFunctionUpdates
                 Effect: Allow

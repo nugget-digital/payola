@@ -4,6 +4,9 @@ on:
     branches:
       - master
       - open-api-spec
+      paths:
+        - /stacks/api/openapi.yaml
+        - cd.yaml
 
 jobs:
   deploy:
@@ -20,10 +23,10 @@ jobs:
       - name: validate the open api spec
         uses: mpetrunic/swagger-cli-action@v1.0.0
         with:
-          command: "validate ./stacks/api/open-api.yaml"
+          command: "validate ./stacks/api/openapi.yaml"
       # - name: generate the api docs in pdf format
       #   run: |
-      #     swagger2pdf -y -s ./stacks/api/open-api.yaml -o ./stacks/api/
+      #     swagger2pdf -y -s ./stacks/api/openapi.yaml -o ./stacks/api/
       # - name: validate the cloudformation template
       #   run: |
       #     aws cloudformation validate-template \
