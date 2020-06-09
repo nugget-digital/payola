@@ -21,19 +21,16 @@ jobs:
         uses: mpetrunic/swagger-cli-action@v1.0.0
         with:
           command: "validate ./stacks/api/openapi.yaml"
-      - name: setup node 
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12'
-      - name: install swagger2markdown dependency
-        run: |
-          npm install swagger2markdown
-      - name: convert the openapi spec to markdown
-        run: |
-          npx swagger-markdown -i ./stacks/api/openapi.yaml
-      # - name: generate the api docs in pdf format
+      # - name: setup node
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: '12'
+      # - name: install swagger2markdown dependency
       #   run: |
-      #     swagger2pdf -y -s ./stacks/api/openapi.yaml -o ./stacks/api/
+      #     npm install swagger2markdown
+      # - name: generating the openapi documentation file
+      #   run: |
+      #     npx swagger-markdown -i ./stacks/api/openapi.yaml
       # - name: validate the cloudformation template
       #   run: |
       #     aws cloudformation validate-template \
