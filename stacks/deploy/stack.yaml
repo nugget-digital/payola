@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Continuous deployment setup providing one user to maintain all fuel0
+  stacks. this template's outputs provide the aws credentials that are
+  prerequisites for performing the stack updates. Make sure to manually
+  deploy this stack to the test and prod account, then set the github secrets
+  AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY given the corresponding stack outputs.
+Metadata:
+  "AWS::CloudFormation::Interface":
+    ParameterGroups:
+      - Label:
+          default: Storage
+        Parameters:
+          - SiteBucketName
+
+Parameters:
+  # Domain:
+  #   Description: Route53 domain fx example.com
+  #   Type: String
+  # HostedZoneId:
+  #   Description: Route53 hosted zone id
+  #   Type: AWS::Route53::HostedZone::Id
+  DefaultTTL:
+    Description: Default cache object TTL - default 1h
+    Type: Number
+    Default: 3600
+  MaxTTL:
+    Description: Maximum cache object TTL - default 2h
+    Type: Number
+    Default: 7200
+  MinTTL:
+    Description: Minimum cache object TTL - default 1/2h
+    Type: Number
+    Default: 1800
+  DefaultRootObject:
+    Description: Default root object path used by the CloudFront distribution
+    Type: String
+    Default: index.html
+
+Resources:
+  User:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: DeploymentPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: AllowBucketObjectUpdates
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: !Sub arn:aws:s3:::{SiteBucketName}/*
+
+              - Sid: AllowLambdaFunctionUpdates
+                Effect: Allow
+                Action:
+                  - lambda:UpdateFunctionCode
+                  - lambda:PublishVersion
+                Resource: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*
+
+              - Sid: AllowStackDescriptionsAndUpdates
+                Effect: Allow
+                Action:
+                  - cloudformation:DescribeStackResources
+                  - cloudformation:CreateStack
+                  - cloudformation:UpdateStack
+                Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/*
+
+              - Sid: AllowTemplateValidation
+                Effect: Allow
+                Action: cloudformation:ValidateTemplate
+                Resource: "*"
+
+  AccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Status: Active
+      UserName: !Ref User
+
+Outputs:
+  UserArn:
+    Description: IAM user with bucket and stack admin rigths
+    Value: !GetAtt User.Arn
+
+  UserAccessKeyId:
+    Description: Access key id of the IAM user
+    Value: !Ref AccessKey
+
+  UserSecretAccessKey:
+    Description: Secret access key of the IAM user
+    Value: !GetAtt AccessKey.SecretAccessKey
