@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+provider:
+  name: aws
+  runtime: rust
+  region: us-east-1
+
+resources:
+  Resources:
+    PayolaRestApi:
+      Type: "AWS:ApiGateway:RestApi"
+      Properties:
+        Body:
+          ${file{./openapi.yml}}
+        Name: PayolaRestApi
+
+functions:
+  createClaim:
+    handler: handler.createClaim
+    events:
+      - http:
+        path: /claim/{id}
+        method: post
+          request:
+            parameters:
+              paths:
+                id: true
+  getClaimStatus:
+    handler: handler.getClaimStatus
+    events:
+      - http:
+        path: /claim/{id}
+        method: head
+          request:
+            parameters:
+              paths:
+                id: true
+  updateClaim:
+    handler: handler.updateClaim
+    events:
+      - http:
+        path: /claim/store/{id,msisdn,amount,currency}
+        method: put
+  storeClaim:
+    handler: handler.storeClaim
+    events:
+      - http:
+        path: /claim/store/{id,msisdn,amount,currency}
+        method: post
+  getBalance:
+    handler: handler.getBalance
+    events:
+      - http:
+        path: /gas-provider/balance/{id}
+        method: post
+          request:
+            parameters:
+              paths:
+                id: true
+  getConfig:
+    handler: handler.getConfig
+    events:
+      - http:
+        path: /devices/config/
+        method: get
