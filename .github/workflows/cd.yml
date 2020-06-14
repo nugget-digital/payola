@@ -1,9 +1,5 @@
 name: continous deployment
-on:
-  push:
-    branches:
-      - master
-      - open-api-spec
+on: push
 
 jobs:
   deploy:
@@ -20,19 +16,7 @@ jobs:
       - name: validate the open api spec
         uses: mpetrunic/swagger-cli-action@v1.0.0
         with:
-          command: "validate ./stacks/api/openapi.yaml"
-      # - name: setup node
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: '12'
-      # - name: install swagger2markdown dependency
-      #   run: |
-      #     npm install swagger2markdown
-      # - name: generating the openapi documentation file
-      #   run: |
-      #     npx swagger-markdown -i ./stacks/api/openapi.yaml
-      # - name: validate the cloudformation template
-      #   run: |
+          command: "validate ./stacks/api/openapi.yml"
       #     aws cloudformation validate-template \
       #       --template-body="$(cat ./stack.yml)"
       # - name: deploy the web stack
