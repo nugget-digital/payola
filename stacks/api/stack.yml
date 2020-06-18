@@ -21,20 +21,20 @@ functions:
       - http:
         path: /claim/{id}
         method: post
-          request:
-            parameters:
-              paths:
-                id: true
+        request:
+          parameters:
+            paths:
+              id: true
   getClaimStatus:
     handler: handler.getClaimStatus
     events:
       - http:
         path: /claim/{id}
         method: head
-          request:
-            parameters:
-              paths:
-                id: true
+        request:
+          parameters:
+            paths:
+              id: true
   updateClaim:
     handler: handler.updateClaim
     events:
@@ -53,10 +53,10 @@ functions:
       - http:
         path: /gas-provider/balance/{id}
         method: post
-          request:
-            parameters:
-              paths:
-                id: true
+        request:
+          parameters:
+            paths:
+              id: true
   getConfig:
     handler: handler.getConfig
     events:
