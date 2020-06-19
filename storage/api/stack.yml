@@ -1,14 +1,14 @@
 AWSTemplateFormatVersion: 2010-09-09
 Resources:
   PayolaRestApi:
-    Type: AWS:ApiGateway:RestApi
+    Type: AWS::ApiGateway::RestApi
     Properties:
       Name: PayolaRestApi
       # BodyS3Location:
 
 
   CreateClaim:
-    Type: AWS:Lambda:Function
+    Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.createClaim
@@ -22,7 +22,7 @@ Resources:
       #             id: true
 
   GetClaimStatus:
-    Type: AWS:Lambda:Function
+    Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getClaimStatus
@@ -36,7 +36,7 @@ Resources:
       #             id: true
 
   UpdateClaim:
-    Type: AWS:Lambda:Function
+    Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.updateClaim
@@ -46,7 +46,7 @@ Resources:
       #       method: put
 
   StoreClaim:
-    Type: AWS:Lambda:Function
+    Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.storeClaim
@@ -56,7 +56,7 @@ Resources:
       #       method: post
 
   GetBalance:
-    Type: AWS:Lambda:Function
+    Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getBalance
@@ -70,7 +70,7 @@ Resources:
       #             id: true
 
   GetConfig:
-    Type: AWS:Lambda:Function
+    Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getConfig
