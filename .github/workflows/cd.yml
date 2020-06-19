@@ -16,11 +16,11 @@ jobs:
       - name: validate the open api spec
         uses: mpetrunic/swagger-cli-action@v1.0.0
         with:
-          command: "validate ./stacks/api/openapi.yml"
+          command: "validate ./storage/openapi/openapi.yml"
       - name: validate the cloudformation template
         run: |
           aws cloudformation validate-template \
-            --template-body="$(cat ./stacks/api/stack.yml)"
+            --template-body="$(cat ./storage/api/stack.yml)"
       # - name: deploy the web stack
       #   run: |
       #     aws cloudformation deploy \

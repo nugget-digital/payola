@@ -1,18 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
-
-provider:
-  name: aws
-  runtime: rust
-  region: us-east-1
-
-resources:
-  Resources:
-    PayolaRestApi:
-      Type: "AWS:ApiGateway:RestApi"
-      Properties:
-        Body:
-          ${file{./openapi.yml}}
-        Name: PayolaRestApi
+Resources:
+  PayolaRestApi:
+    Type: AWS:ApiGateway:RestApi
+    Properties:
+      Name: PayolaRestApi
+      # BodyS3Location: 
 
 functions:
   createClaim:
