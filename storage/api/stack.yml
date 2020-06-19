@@ -7,57 +7,74 @@ Resources:
       # BodyS3Location:
 
 
-functions:
-  createClaim:
-    handler: handler.createClaim
-    events:
-      - http:
-          path: /claim/{id}
-          method: post
-          request:
-            parameters:
-              paths:
-                id: true
+  CreateClaim:
+    Type: AWS:Lambda:Function
+    Properties:
+      Runtime: rust
+      Handler: handler.createClaim
+      # events:
+      #   - http:
+      #       path: /claim/{id}
+      #       method: post
+      #       request:
+      #         parameters:
+      #           paths:
+      #             id: true
 
-  getClaimStatus:
-    handler: handler.getClaimStatus
-    events:
-      - http:
-          path: /claim/{id}
-          method: head
-          request:
-            parameters:
-              paths:
-                id: true
+  GetClaimStatus:
+    Type: AWS:Lambda:Function
+    Properties:
+      Runtime: rust
+      Handler: handler.getClaimStatus
+      # events:
+      #   - http:
+      #       path: /claim/{id}
+      #       method: head
+      #       request:
+      #         parameters:
+      #           paths:
+      #             id: true
 
-  updateClaim:
-    handler: handler.updateClaim
-    events:
-      - http:
-          path: /claim/store/{id,msisdn,amount,currency}
-          method: put
+  UpdateClaim:
+    Type: AWS:Lambda:Function
+    Properties:
+      Runtime: rust
+      Handler: handler.updateClaim
+      # events:
+      #   - http:
+      #       path: /claim/store/{id,msisdn,amount,currency}
+      #       method: put
 
-  storeClaim:
-    handler: handler.storeClaim
-    events:
-      - http:
-          path: /claim/store/{id,msisdn,amount,currency}
-          method: post
+  StoreClaim:
+    Type: AWS:Lambda:Function
+    Properties:
+      Runtime: rust
+      Handler: handler.storeClaim
+      # events:
+      #   - http:
+      #       path: /claim/store/{id,msisdn,amount,currency}
+      #       method: post
 
-  getBalance:
-    handler: handler.getBalance
-    events:
-      - http:
-          path: /gas-provider/balance/{id}
-          method: post
-          request:
-            parameters:
-              paths:
-                id: true
+  GetBalance:
+    Type: AWS:Lambda:Function
+    Properties:
+      Runtime: rust
+      Handler: handler.getBalance
+      # events:
+      #   - http:
+      #       path: /gas-provider/balance/{id}
+      #       method: post
+      #       request:
+      #         parameters:
+      #           paths:
+      #             id: true
 
-  getConfig:
-    handler: handler.getConfig
-    events:
-      - http:
-          path: /devices/config/
-          method: get
+  GetConfig:
+    Type: AWS:Lambda:Function
+    Properties:
+      Runtime: rust
+      Handler: handler.getConfig
+      # events:
+      #   - http:
+      #       path: /devices/config/
+      #       method: get
