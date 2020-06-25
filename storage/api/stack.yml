@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: | Payola Api Distribution Stack
+Description: Payola Api Distribution Stack
 
 Resources:
   PayolaRestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: PayolaRestApi
-      # Body: Inject openapi.yml or specify file reference
+      # Body: Inject openapi.yml if valid
 
 
   CreateClaim:
@@ -14,33 +14,39 @@ Resources:
     Properties:
       Runtime: rust
       Handler: handler.createClaim
+      Role:
 
   GetClaimStatus:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getClaimStatus
+      Role:
 
   UpdateClaim:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.updateClaim
+      Role:
 
   StoreClaim:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.storeClaim
+      Role:
 
   GetBalance:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getBalance
+      Role:
 
   GetConfig:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getConfig
+      Role:
