@@ -1,0 +1,170 @@
+openapi: 3.0.0
+info:
+  title: Fuel0
+  version: 0.0.1
+
+paths:
+  /claim/{id}:
+    post:
+      summary: create a claim
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          required: true
+          description: uuid for the claim to be created
+      responses:
+        202:
+          description: accepted
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        500:
+          description: internal server error
+    head:
+      summary: get the status of a particular claim
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          required: true
+          description: uuid of the claim
+      responses:
+        102:
+          description: pending
+        200:
+          description: accepted
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        402:
+          description: rejected
+        404:
+          description: not found
+        500:
+          description: internal server error
+  /claim/store/{id,msisdn,amount,currency}:
+    put:
+      summary: update a claim
+      parameters:
+        - in: path
+          name: id,msisdn,amount,currency
+          schema:
+            $ref: "#/components/schemas/Claim"
+          required: true
+          description: uuid, msisdn, amount and currency of the claim to be updated
+      responses:
+        201:
+          description: updated
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        404:
+          description: not found
+        500:
+          description: internal server error
+    post:
+      summary: store a claim
+      parameters:
+        - in: path
+          name: id,msisdn,amount,currency
+          schema:
+            $ref: "#/components/schemas/Claim"
+          required: true
+          description: uuid, msisdn, amount and currency of the claim to be stored
+      responses:
+        201:
+          description: created
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        404:
+          description: not found
+        500:
+          description: internal server error
+  /gas-provider/balance/{id}:
+    get:
+      summary: get the balance of the gas provider
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          required: true
+          description: uuid of the gas provider
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Balance"
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        500:
+          description: internal server error
+  /devices/config/:
+    get:
+      summary: get the global device configuration
+      description: provides devices with configuration updates while they are in the field
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceConfiguration"
+        400:
+          description: bad request
+        401:
+          description: unauthorized
+        404:
+          description: not found
+        500:
+          description: internal server error
+
+components:
+  schemas:
+    Uuid:
+      type: string
+      pattern: "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89AB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
+    Claim:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/Uuid"
+        msisdn:
+          type: string
+          pattern: "^23[34]{1}[1-9]{2}[0-9]{6,7}$"
+        amount:
+          type: number
+          description: It is still unclear how to perform the currency counting (smallest currency unit?)
+        currency:
+          type: string
+    Balance:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/Uuid"
+        amount:
+          type: number
+          description: It is still unclear how to perform the currency counting (smallest currency unit?)
+        currency:
+          type: string
+    DeviceConfiguration:
+      type: object
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
+security:
+  - basicAuth: []

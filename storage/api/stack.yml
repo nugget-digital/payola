@@ -6,7 +6,8 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: PayolaRestApi
-      # Body: Inject openapi.yml if valid
+      Body:
+        OPENAPI
 
 
   CreateClaim:
@@ -14,39 +15,39 @@ Resources:
     Properties:
       Runtime: rust
       Handler: handler.createClaim
-      Role:
+#      Role:
 
   GetClaimStatus:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getClaimStatus
-      Role:
+#      Role:
 
   UpdateClaim:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.updateClaim
-      Role:
+#      Role:
 
   StoreClaim:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.storeClaim
-      Role:
+#      Role:
 
   GetBalance:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getBalance
-      Role:
+#      Role:
 
   GetConfig:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getConfig
-      Role:
+#      Role:
