@@ -9,7 +9,6 @@ Resources:
       Body:
         OPENAPI
 
-
   CreateClaim:
     Type: AWS::Lambda::Function
     Properties:

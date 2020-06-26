@@ -1,4 +1,7 @@
-#!/bin/sh
-openapi=$(cat "openapi.yml")
-# Replace flag with
-sed -i "s/OPENAPI/${openapi}/" stack.yml
+#!/usr/bin/env bash
+# Replace OPENAPI flag with openapi specification
+
+sed -i "/OPENAPI/ {
+	r openapi.yml
+	d
+}" stack.yml
