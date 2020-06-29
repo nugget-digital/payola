@@ -6,7 +6,7 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: PayolaRestApi
-      Body:
+      Body: # Flag serves as a substituion placeholder
         OPENAPI
 
   CreateClaim:
