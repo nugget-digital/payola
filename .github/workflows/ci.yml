@@ -4,9 +4,9 @@ on: push
 
 env:
   AWS_REGION: us-east-1
-  # NOTE: CFN_TEMPLATES must be newline-delimited string indicating 
+  # NOTE: CFN_TEMPLATES must be newline-delimited string indicating
   # cloudformation template files to validate
-  CFN_TEMPLATES: ".github/cd_setup.yml\n"
+  CFN_TEMPLATES: ".github/cd_setup.yml\n./compute/stack.yml"
   OPEN_API_SPEC: compute/openapi.yml
 
 jobs:
