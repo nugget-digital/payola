@@ -1,8 +1,27 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Payola Api Distribution Stack
 
-Resources:
+Metadata:
+  "AWS::Cloudformation::Interface":
+    ParameterGroups:
+      - Label:
+          default: API
+        Parameters:
+          - FunctionMemorySize
+          . FunctionTimeOut
 
+Parameters:
+  FunctionMemorySize:
+    Description: how many megabytes of ram to allocate for the lambda
+    AllowedPattern: Number
+    Default: 128
+
+  FunctionTimeOut:
+    Description: Lambda timeout in seconds
+    AllowedPattern: Number
+    Default: 3
+
+Resources:
   PayolaRestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -34,44 +53,44 @@ Resources:
                 - dynamodb:GetItem
                 - dynamodb:PutItem
 
-  CreateClaim:
+  CreateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.createClaim
-#      Role:
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
 
-  GetClaimStatus:
+  GetClaimStatusLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getClaimStatus
-#      Role:
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
 
-  UpdateClaim:
+  UpdateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.updateClaim
-#      Role:
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
 
-  StoreClaim:
+  StoreClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.storeClaim
-#      Role:
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
 
-  GetBalance:
+  GetBalanceLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getBalance
-#      Role:
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
 
-  GetConfig:
+  GetConfigLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
       Handler: handler.getConfig
-#      Role:
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
