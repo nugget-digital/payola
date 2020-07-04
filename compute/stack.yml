@@ -2,12 +2,37 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Payola Api Distribution Stack
 
 Resources:
+
   PayolaRestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: PayolaRestApi
-      Body: # Flag serves as a placeholder for openapi.yml
-        OPENAPI
+      ApiKeySourceType: X-Api-Key
+      EndpointConfiguration: PRIVATE
+      # Body: # Flag serves as a placeholder for openapi.yml
+      #   OPENAPI
+
+  LambdaExecutionRole:
+  Type: AWS::IAM::Role
+  Properties:
+    AssumeRolePolicyDocument:
+      Version: 2012-10-17
+      Statement:
+      - Effect: Allow
+        Prinipal:
+          Service:
+            - lambda.amazonaws.com
+        Action:
+          - "sts:AssumeRole"
+    Policies:
+      - PolicyName: LambdaExecutionPolicy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
 
   CreateClaim:
     Type: AWS::Lambda::Function

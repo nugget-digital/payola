@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Fuel0
+  title: Payola
   version: 0.0.1
 
 paths:
