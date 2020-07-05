@@ -1,8 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Payola Api Distribution Stack
+Description: Payola API Distribution Stack
 
 Metadata:
-  "AWS::Cloudformation::Interface":
+  AWS::Cloudformation::Interface:
     ParameterGroups:
       - Label:
           default: API
@@ -13,84 +13,111 @@ Metadata:
 Parameters:
   FunctionMemorySize:
     Description: how many megabytes of ram to allocate for the lambda
-    AllowedPattern: Number
+    Type: Number
     Default: 128
 
   FunctionTimeOut:
     Description: Lambda timeout in seconds
-    AllowedPattern: Number
+    Type: Number
     Default: 3
 
 Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: payola:name
+          Value: !Sub ${BucketName}-${Environment}
+      BucketName: !Sub ${BucketName}-${Environment}
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: AllowLambda
+
   PayolaRestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: PayolaRestApi
-      ApiKeySourceType: X-Api-Key
-      EndpointConfiguration: PRIVATE
-      # Body: # Flag serves as a placeholder for openapi.yml
+      # TODO: Body: # Flag serves as a placeholder for openapi.yml
       #   OPENAPI
 
   LambdaExecutionRole:
-  Type: AWS::IAM::Role
-  Properties:
-    AssumeRolePolicyDocument:
-      Version: 2012-10-17
-      Statement:
-      - Effect: Allow
-        Prinipal:
-          Service:
-            - lambda.amazonaws.com
-        Action:
-          - "sts:AssumeRole"
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Prinipal:
+            Service:
+              - lambda.amazonaws.com
+          Action:
+            - sts:AssumeRole
     Policies:
       - PolicyName: LambdaExecutionPolicy
         PolicyDocument:
           Version: 2012-10-17
           Statement:
             - Effect: Allow
+            # TODO: narrow down permissions with a lambda exec role for every handler
               Action:
-                - dynamodb:GetItem
-                - dynamodb:PutItem
+                - dynamodb:*
 
   CreateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
-      Handler: handler.createClaim
+      Handler: lib.create_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      MemorySize: !Ref FunctionMemorySize
+      Timeout: !Ref FunctionTimeout
 
   GetClaimStatusLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
-      Handler: handler.getClaimStatus
+      Handler: lib.get_claim_status
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      MemorySize: !Ref FunctionMemorySize
+      Timeout: !Ref FunctionTimeout
 
   UpdateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
-      Handler: handler.updateClaim
+      Handler: lib.update_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      MemorySize: !Ref FunctionMemorySize
+      Timeout: !Ref FunctionTimeout
 
   StoreClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
-      Handler: handler.storeClaim
+      Handler: lib.store_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      MemorySize: !Ref FunctionMemorySize
+      Timeout: !Ref FunctionTimeout
 
   GetBalanceLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
-      Handler: handler.getBalance
+      Handler: lib.get_balance
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      MemorySize: !Ref FunctionMemorySize
+      Timeout: !Ref FunctionTimeout
 
   GetConfigLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: rust
-      Handler: handler.getConfig
+      Handler: lib.get_config
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      MemorySize: !Ref FunctionMemorySize
+      Timeout: !Ref FunctionTimeout
