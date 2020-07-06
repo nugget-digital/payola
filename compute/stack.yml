@@ -71,7 +71,7 @@ Resources:
   CreateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: rust
+      Runtime: provided
       Handler: lib.create_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
@@ -80,7 +80,7 @@ Resources:
   GetClaimStatusLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: rust
+      Runtime: provided
       Handler: lib.get_claim_status
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
@@ -89,7 +89,7 @@ Resources:
   UpdateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: rust
+      Runtime: provided
       Handler: lib.update_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
@@ -98,7 +98,7 @@ Resources:
   StoreClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: rust
+      Runtime: provided
       Handler: lib.store_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
@@ -107,7 +107,7 @@ Resources:
   GetBalanceLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: rust
+      Runtime: provided
       Handler: lib.get_balance
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
@@ -116,7 +116,7 @@ Resources:
   GetConfigLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: rust
+      Runtime: provided
       Handler: lib.get_config
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
