@@ -5,12 +5,29 @@ Metadata:
   AWS::Cloudformation::Interface:
     ParameterGroups:
       - Label:
+        default: Meta
+        Parameters:
+          - Environment
+      - Label:
+        default: Storage
+        Parameters: BucketName
+      - Label:
           default: API
         Parameters:
           - FunctionMemorySize
           . FunctionTimeOut
 
 Parameters:
+  Environment:
+    Description: Environment name - test/prod
+    AllowedPattern: "^(test|prod)$"
+    Type: String
+
+  BucketName:
+    Description: S3 bucket name
+    AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
+    Type: String
+    
   FunctionMemorySize:
     Description: how many megabytes of ram to allocate for the lambda
     Type: Number
@@ -43,8 +60,6 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: PayolaRestApi
-      # TODO: Body: # Flag serves as a placeholder for openapi.yml
-      #   OPENAPI
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
