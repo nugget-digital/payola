@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Payola API Distribution Stack
+Description: Payola API Stack
 
 Metadata:
   AWS::Cloudformation::Interface:
@@ -27,7 +27,7 @@ Parameters:
     Description: S3 bucket name
     AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
     Type: String
-    
+
   FunctionMemorySize:
     Description: how many megabytes of ram to allocate for the lambda
     Type: Number
@@ -59,7 +59,10 @@ Resources:
   PayolaRestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: PayolaRestApi
+      Name: !Sub ${AWS::Stackname}-restapi-${Environment}
+      Tags:
+        - Key: "payola:name"
+          Value: !Sub ${AWS::Stackname}-restapi-${Environment}
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -83,6 +86,17 @@ Resources:
               Action:
                 - dynamodb:*
 
+  CreateLambdaLayer:
+    Type: AWS::Lambda:LayerVersion
+    Properties:
+      CompatibleRuntimes:
+        - provided
+      Content:
+        S3Bucket: !Ref Bucket
+        S3Key: runtime.zip
+      LayerName: ... 
+      Description: Dependencies for each lambda function
+# TODO: create lambda layer for devices config?
   CreateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -91,6 +105,8 @@ Resources:
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
+      Layers:
+        - !Ref CreateLambdaLayer
 
   GetClaimStatusLambda:
     Type: AWS::Lambda::Function
@@ -100,6 +116,8 @@ Resources:
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
+      Layers:
+        - !Ref CreateLambdaLayer
 
   UpdateClaimLambda:
     Type: AWS::Lambda::Function
@@ -109,6 +127,8 @@ Resources:
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
+      Layers:
+        - !Ref CreateLambdaLayer
 
   StoreClaimLambda:
     Type: AWS::Lambda::Function
@@ -118,6 +138,8 @@ Resources:
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
+      Layers:
+        - !Ref CreateLambdaLayer
 
   GetBalanceLambda:
     Type: AWS::Lambda::Function
@@ -127,6 +149,8 @@ Resources:
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
+      Layers:
+        - !Ref CreateLambdaLayer
 
   GetConfigLambda:
     Type: AWS::Lambda::Function
