@@ -54,7 +54,24 @@ Resources:
       PolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Sid: AllowLambda
+          - Sid: AllowLambdaGetPutObject
+            Effect: Allow
+            Principal:
+              AWS: !GetAtt LambdaExecutionRole.Arn
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+            Resource:
+              - !Sub arn:aws:s3:::${Bucket}/*
+
+          - Sid: AllowLambdaListBucket
+            Effect: Allow
+            Principal:
+              AWS: !GetAtt LambdaExecutionRole.Arn
+            Action:
+              - s3:ListBucket
+            Resource:
+              - !Sub arn:aws:s3:::${Bucket}/*
 
   PayolaRestApi:
     Type: AWS::ApiGateway::RestApi
@@ -94,9 +111,9 @@ Resources:
       Content:
         S3Bucket: !Ref Bucket
         S3Key: runtime.zip
-      LayerName: ... 
+      LayerName: ...
       Description: Dependencies for each lambda function
-# TODO: create lambda layer for devices config?
+# TODO: create a seperate lambda layer for devices config?
   CreateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
