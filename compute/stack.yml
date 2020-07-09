@@ -15,7 +15,8 @@ Metadata:
           default: API
         Parameters:
           - FunctionMemorySize
-          . FunctionTimeOut
+          - FunctionTimeOut
+          - LayerName
 
 Parameters:
   Environment:
@@ -38,6 +39,11 @@ Parameters:
     Type: Number
     Default: 3
 
+  LayerName:
+    Description:
+    AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
+    Type: String
+    
 Resources:
   Bucket:
     Type: AWS::S3::Bucket
