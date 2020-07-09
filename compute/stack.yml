@@ -17,7 +17,7 @@ Metadata:
         Parameters:
           - FunctionMemorySize
           - FunctionTimeOut
-          - LayerName
+          - LambdaLayerName
 
 Parameters:
   Environment:
@@ -40,7 +40,7 @@ Parameters:
     Type: Number
     Default: 3
 
-  LayerName:
+  LambdaLayerName:
     Description:
     AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
     Type: String
@@ -118,7 +118,7 @@ Resources:
       Content:
         S3Bucket: !Ref Bucket
         S3Key: runtime.zip
-      LayerName: ...
+      LayerName: !Ref LambdaLayerName
       Description: Dependencies for each lambda function
 # TODO: create a seperate lambda layer for devices config?
   CreateClaimLambda:
