@@ -157,7 +157,7 @@ Resources:
         method.request.body.id: True
       RequestValidatorId: !Ref RequestValidator # TODO
       Integration:
-        Type: AWS_PROXY / HTTP # TODO
+        Type: AWS_PROXY
         IntegrationMethod: POST
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
@@ -181,7 +181,7 @@ Resources:
         method.request.body.id: True
       RequestValidatorId: !Ref RequestValidator # TODO
       Integration:
-        Type: AWS_PROXY / HTTP # TODO
+        Type: AWS_PROXY
         IntegrationMethod: HEAD
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
@@ -211,7 +211,7 @@ Resources:
         method.request.body.currency: True
       RequestValidatorId: !Ref RequestValidator # TODO
       Integration:
-        Type: AWS_PROXY / HTTP # TODO
+        Type: AWS_PROXY
         IntegrationMethod: PUT
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
@@ -239,7 +239,7 @@ Resources:
         method.request.body.currency: True
       RequestValidatorId: !Ref RequestValidator # TODO
       Integration:
-        Type: AWS_PROXY / HTTP # TODO
+        Type: AWS_PROXY
         IntegrationMethod: POST
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
@@ -263,7 +263,7 @@ Resources:
         method.request.body.id: True
       RequestValidatorId: !Ref RequestValidator # TODO
       Integration:
-        Type: AWS_PROXY / HTTP # TODO
+        Type: AWS_PROXY
         IntegrationMethod: GET
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
@@ -287,7 +287,7 @@ Resources:
         method.request.header.content-type: True
       RequestValidatorId: !Ref RequestValidator # TODO
       Integration:
-        Type: AWS_PROXY / HTTP # TODO
+        Type: AWS_PROXY
         IntegrationMethod: GET
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
