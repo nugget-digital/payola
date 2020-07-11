@@ -65,7 +65,7 @@ Parameters:
     Description: Default root object path used by the CloudFront distribution
     AllowedPattern: "^[a-zA-Z0-9_-]+\\.html$"
     Type: String
-    Default: ../dashboard/index.html
+    Default: index.html
 
 Resources:
   Bucket:
@@ -106,7 +106,7 @@ Resources:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
     Properties:
       CloudFrontOriginAccessIdentityConfig:
-        Comment: !Sub ${AWS::StackName}-aaaa # required 
+        Comment: !Sub ${AWS::StackName}-aaaa # required
 
   Distribution:
   Type: AWS::CloudFront::Distribution
