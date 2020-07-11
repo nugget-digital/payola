@@ -72,7 +72,7 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       Tags:
-        - Key: payola:name
+        - Key: "payola:name"
           Value: !Sub ${BucketName}-${Environment}
       BucketName: !Sub ${BucketName}-${Environment}
 
@@ -109,42 +109,200 @@ Resources:
         Comment: !Sub ${AWS::StackName}-aaaa # required
 
   Distribution:
-  Type: AWS::CloudFront::Distribution
-  Properties:
-    Tags:
-      - Key: "payola:name"
-        Value: !Sub ${AWS::StackName}-distribution
-      DistributionConfig:
-        DefaultCacheBehavior:
-          AllowedMethods:
-            - GET
-            - POST
-            - PUT
-            - HEAD
-          CachedMethods:
-            - GET
-            - POST
-            - PUT
-            - HEAD
-          Compress: True
-          DefaultTTL: !Ref DefaultTTL
-          ForwardedValues:
-            Cookies:
-              Forward: none
-            QueryString: False
-          MaxTTL: !Ref MaxTTL
-          MinTTL: !Ref MinTTL
-          TargetOriginId: BucketOrigin
-          ViewerProtocolPolicy: redirect-to-https
-        DefaultRootObject: !Ref DefaultRootObject
-        Enabled: True
-        IPV6Enabled: False
-        Origins:
-          - DomainName: !GetAtt Bucket.DomainName
-            Id: BucketOrigin
-            S3OriginConfig:
-              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
-        PriceClass: PriceClass_100
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      Tags:
+        - Key: "payola:name"
+          Value: !Sub ${AWS::StackName}-distribution
+        DistributionConfig:
+          DefaultCacheBehavior:
+            AllowedMethods:
+              - GET
+              - POST
+              - PUT
+              - HEAD
+            CachedMethods:
+              - GET
+              - POST
+              - PUT
+              - HEAD
+            Compress: True
+            DefaultTTL: !Ref DefaultTTL
+            ForwardedValues:
+              Cookies:
+                Forward: none
+              QueryString: False
+            MaxTTL: !Ref MaxTTL
+            MinTTL: !Ref MinTTL
+            TargetOriginId: BucketOrigin # TODO ?
+            ViewerProtocolPolicy: redirect-to-https # TODO ?
+          DefaultRootObject: !Ref DefaultRootObject
+          Enabled: True
+          IPV6Enabled: False
+          Origins:
+            - DomainName: !GetAtt Bucket.DomainName
+              Id: BucketOrigin
+              S3OriginConfig:
+                OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
+          PriceClass: PriceClass_100
+
+  CreateCreateClaimMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref BasicAuthorizer # TODO
+      HttpMethod: POST
+      RequestParameters:
+        method.request.header.content-type: True
+        method.request.body.id: True
+      RequestValidatorId: !Ref RequestValidator # TODO
+      Integration:
+        Type: AWS_PROXY / HTTP # TODO
+        IntegrationMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - LambdaArn: !GetAtt CreateClaimHandler.Arn
+      MethodResponses:
+        - StatusCode: "202"
+        - StatusCode: "400"
+        - StatusCode: "401"
+        - StatusCode: "500"
+      ResourceId: !Ref Resource # TODO
+      RestApiId: !Ref RestApi
+
+  CreateGetClaimStatusMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref BasicAuthorizer # TODO
+      HttpMethod: HEAD
+      RequestParameters:
+        method.request.header.content-type: True
+        method.request.body.id: True
+      RequestValidatorId: !Ref RequestValidator # TODO
+      Integration:
+        Type: AWS_PROXY / HTTP # TODO
+        IntegrationMethod: HEAD
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - LambdaArn: !GetAtt GetClaimStatusHandler.Arn
+      MethodResponses:
+        - StatusCode: "102"
+        - StatusCode: "200"
+        - StatusCode: "400"
+        - StatusCode: "401"
+        - StatusCode: "402"
+        - StatusCode: "404"
+        - StatusCode: "500"
+      ResourceId: !Ref Resource # TODO
+      RestApiId: !Ref RestApi
+
+  CreateUpdateClaimMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref BasicAuthorizer # TODO
+      HttpMethod: PUT
+      RequestParameters:
+        method.request.header.content-type: True
+        method.request.body.id: True
+        method.request.body.msisdn: True
+        method.request.body.amount: True
+        method.request.body.currency: True
+      RequestValidatorId: !Ref RequestValidator # TODO
+      Integration:
+        Type: AWS_PROXY / HTTP # TODO
+        IntegrationMethod: PUT
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - LambdaArn: !GetAtt UpdateClaimHandler.Arn
+      MethodResponses:
+        - StatusCode: "201"
+        - StatusCode: "400"
+        - StatusCode: "401"
+        - StatusCode: "404"
+        - StatusCode: "500"
+      ResourceId: !Ref Resource # TODO
+      RestApiId: !Ref RestApi
+
+  CreateStoreClaimethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref BasicAuthorizer # TODO
+      HttpMethod: POST
+      RequestParameters:
+        method.request.header.content-type: True
+        method.request.body.id: True
+        method.request.body.msisdn: True
+        method.request.body.amount: True
+        method.request.body.currency: True
+      RequestValidatorId: !Ref RequestValidator # TODO
+      Integration:
+        Type: AWS_PROXY / HTTP # TODO
+        IntegrationMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - LambdaArn: !GetAtt StoreClaimHandler.Arn
+      MethodResponses:
+        - StatusCode: "201"
+        - StatusCode: "400"
+        - StatusCode: "401"
+        - StatusCode: "404"
+        - StatusCode: "500"
+      ResourceId: !Ref Resource # TODO
+      RestApiId: !Ref RestApi
+
+  CreateGetBalanceMethod:
+    Type: AWS::ApiGateway::Method
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref BasicAuthorizer # TODO
+      HttpMethod: GET
+      RequestParameters:
+        method.request.header.content-type: True
+        method.request.body.id: True
+      RequestValidatorId: !Ref RequestValidator # TODO
+      Integration:
+        Type: AWS_PROXY / HTTP # TODO
+        IntegrationMethod: GET
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - LambdaArn: !GetAtt GetBalanceHandler.Arn
+      MethodResponses:
+        - ResponseModels:
+            "application/json": !Ref BalanceResponseModel # TODO
+        - StatusCode: "200"
+        - StatusCode: "400"
+        - StatusCode: "401"
+        - StatusCode: "500"
+      ResourceId: !Ref Resource # TODO
+      RestApiId: !Ref RestApi
+
+  GetConfigMethod:
+    Type: AWS::ApiGateway::Method
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref BasicAuthorizer # TODO
+      HttpMethod: GET
+      RequestParameters:
+        method.request.header.content-type: True
+      RequestValidatorId: !Ref RequestValidator # TODO
+      Integration:
+        Type: AWS_PROXY / HTTP # TODO
+        IntegrationMethod: GET
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - LambdaArn: !GetAtt GetBalanceHandler.Arn
+      MethodResponses:
+        - ResponseModels:
+            "application/json": !Ref DeviceConfigurationResponseModel # TODO
+        - StatusCode: "200"
+        - StatusCode: "400"
+        - StatusCode: "401"
+        - StatusCode: "404"
+        - StatusCode: "500"
+      ResourceId: !Ref Resource # TODO
+      RestApiId: !Ref RestApi
+
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -176,7 +334,7 @@ Resources:
         - Key: "payola:name"
         Value: !Sub ${AWS::Stackname}-restapi-${Environment}
 
-  CreateClaimLambda:
+  CreateClaimHandler:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: go1.x
@@ -185,7 +343,7 @@ Resources:
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
-  GetClaimStatusLambda:
+  GetClaimStatusHandler:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: go1.x
@@ -194,7 +352,7 @@ Resources:
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
-  UpdateClaimLambda:
+  UpdateClaimHandler:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: go1.x
@@ -203,7 +361,7 @@ Resources:
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
-  StoreClaimLambda:
+  StoreClaimHandler:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: go1.x
@@ -212,7 +370,7 @@ Resources:
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
-  GetBalanceLambda:
+  GetBalanceHandler:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: go1.x
@@ -221,7 +379,7 @@ Resources:
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
-  GetConfigLambda:
+  GetConfigHandler:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: provided
