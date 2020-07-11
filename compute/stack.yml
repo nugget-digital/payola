@@ -9,6 +9,13 @@ Metadata:
         Parameters:
           - Environment
       - Label:
+          default: CDN
+        Parameters:
+          - DefaultRootObject
+          - DefaultTTL
+          - MaxTTL
+          - MinTTL
+      - Label:
           default: Storage
         Parameters:
           - BucketName
@@ -17,7 +24,6 @@ Metadata:
         Parameters:
           - FunctionMemorySize
           - FunctionTimeOut
-          - LambdaLayerName
 
 Parameters:
   Environment:
@@ -40,10 +46,26 @@ Parameters:
     Type: Number
     Default: 3
 
-  LambdaLayerName:
-    Description:
-    AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
+  DefaultTTL:
+    Description: Default cache object TTL - default 1h
+    Type: Number
+    Default: 3600
+
+  MaxTTL:
+    Description: Maximum cache object TTL - default 2h
+    Type: Number
+    Default: 7200
+
+  MinTTL:
+    Description: Minimum cache object TTL - default 1/2h
+    Type: Number
+    Default: 1800
+
+  DefaultRootObject:
+    Description: Default root object path used by the CloudFront distribution
+    AllowedPattern: "^[a-zA-Z0-9_-]+\\.html$"
     Type: String
+    Default: index.html
 
 Resources:
   Bucket:
@@ -73,20 +95,56 @@ Resources:
 
           - Sid: AllowLambdaListBucket
             Effect: Allow
-            Principal:
+            Principal:BucketName
               AWS: !GetAtt LambdaExecutionRole.Arn
             Action:
               - s3:ListBucket
             Resource:
-              - !Sub arn:aws:s3:::${Bucket}/*
+              - !GetAtt Bucket.Arn
 
-  PayolaRestApi:
-    Type: AWS::ApiGateway::RestApi
+  OriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
     Properties:
-      Name: !Sub ${AWS::Stackname}-restapi-${Environment}
-      Tags:
-        - Key: "payola:name"
-          Value: !Sub ${AWS::Stackname}-restapi-${Environment}
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub ${AWS::StackName}-cfs3oai # TODO: why
+
+  Distribution:
+  Type: AWS::CloudFront::Distribution
+  Properties:
+    Tags:
+      - Key: "payola:name"
+        Value: !Sub ${AWS::StackName}-distribution
+      DistributionConfig:
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - POST
+            - PUT
+            - HEAD
+          CachedMethods:
+            - GET
+            - POST
+            - PUT
+            - HEAD
+          Compress: True
+          DefaultTTL: !Ref DefaultTTL
+          ForwardedValues:
+            Cookies:
+              Forward: none
+            QueryString: False
+          MaxTTL: !Ref MaxTTL
+          MinTTL: !Ref MinTTL
+          TargetOriginId: BucketOrigin
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: !Ref DefaultRootObject
+        Enabled: True
+        IPV6Enabled: False
+        Origins:
+          - DomainName: !GetAtt Bucket.DomainName
+            Id: BucketOrigin
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
+        PriceClass: PriceClass_100
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -110,71 +168,58 @@ Resources:
               Action:
                 - dynamodb:*
 
-  CreateLambdaLayer:
-    Type: AWS::Lambda:LayerVersion
+  PayolaRestApi:
+    Type: AWS::ApiGateway::RestApi
     Properties:
-      CompatibleRuntimes:
-        - provided
-      Content:
-        S3Bucket: !Ref Bucket
-        S3Key: runtime.zip
-      LayerName: !Ref LambdaLayerName
-      Description: Dependencies for each lambda function
-# TODO: create a seperate lambda layer for devices config?
+      Name: !Sub ${AWS::Stackname}-restapi-${Environment}
+      Tags:
+        - Key: "payola:name"
+        Value: !Sub ${AWS::Stackname}-restapi-${Environment}
+
   CreateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: provided
+      Runtime: go1.x
       Handler: lib.create_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
-      Layers:
-        - !Ref CreateLambdaLayer
 
   GetClaimStatusLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: provided
+      Runtime: go1.x
       Handler: lib.get_claim_status
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
-      Layers:
-        - !Ref CreateLambdaLayer
 
   UpdateClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: provided
+      Runtime: go1.x
       Handler: lib.update_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
-      Layers:
-        - !Ref CreateLambdaLayer
 
   StoreClaimLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: provided
+      Runtime: go1.x
       Handler: lib.store_claim
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
-      Layers:
-        - !Ref CreateLambdaLayer
 
   GetBalanceLambda:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: provided
+      Runtime: go1.x
       Handler: lib.get_balance
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
-      Layers:
-        - !Ref CreateLambdaLayer
 
   GetConfigLambda:
     Type: AWS::Lambda::Function
