@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Payola API Stack
 
 Metadata:
-  AWS::Cloudformation::Interface:
+  "AWS::Cloudformation::Interface":
     ParameterGroups:
       - Label:
           default: Meta
@@ -95,10 +95,9 @@ Resources:
 
           - Sid: AllowLambdaListBucket
             Effect: Allow
-            Principal:BucketName
+            Principal:
               AWS: !GetAtt LambdaExecutionRole.Arn
-            Action:
-              - s3:ListBucket
+            Action: s3:ListBucket
             Resource:
               - !GetAtt Bucket.Arn
 
@@ -303,7 +302,6 @@ Resources:
       ResourceId: !Ref Resource # TODO
       RestApiId: !Ref RestApi
 
-
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -314,8 +312,7 @@ Resources:
           Prinipal:
             Service:
               - lambda.amazonaws.com
-          Action:
-            - sts:AssumeRole
+          Action: sts:AssumeRole
     Policies:
       - PolicyName: LambdaExecutionPolicy
         PolicyDocument:
@@ -332,14 +329,14 @@ Resources:
       Name: !Sub ${AWS::Stackname}-restapi-${Environment}
       Tags:
         - Key: "payola:name"
-        Value: !Sub ${AWS::Stackname}-restapi-${Environment}
+          Value: !Sub ${AWS::Stackname}-restapi-${Environment}
 
   CreateClaimHandler:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: go1.x
       Handler: lib.create_claim
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
@@ -348,7 +345,7 @@ Resources:
     Properties:
       Runtime: go1.x
       Handler: lib.get_claim_status
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
@@ -357,7 +354,7 @@ Resources:
     Properties:
       Runtime: go1.x
       Handler: lib.update_claim
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
@@ -366,7 +363,7 @@ Resources:
     Properties:
       Runtime: go1.x
       Handler: lib.store_claim
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
@@ -375,7 +372,7 @@ Resources:
     Properties:
       Runtime: go1.x
       Handler: lib.get_balance
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
@@ -384,6 +381,6 @@ Resources:
     Properties:
       Runtime: provided
       Handler: lib.get_config
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${LambdaExecutionRole}
+      Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
