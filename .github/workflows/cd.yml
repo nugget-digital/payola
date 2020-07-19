@@ -1,4 +1,4 @@
-payolaname: continous deployment
+name: continous deployment
 
 on: push
 
@@ -31,7 +31,7 @@ jobs:
         id: configure_environment
         run: |
           echo "::set-env name=_STACK_NAME::payola-$_ENVIRONMENT"
-          echo "::set-env name=_GET_BALANCE_HANDLER_NAME::payola-$_ENVIRONMENT-GET_BALANCE_HANDLER"
+          echo "::set-env name=_GET_BALANCE_HANDLER_NAME::payola-$_ENVIRONMENT-getbalanceHandler"
           echo "::set-output name=_stack_name::payola-$_ENVIRONMENT"
 
       - name: configure aws credentials
