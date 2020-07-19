@@ -1,4 +1,4 @@
-name: continous deployment
+payolaname: continous deployment
 
 on: push
 
@@ -19,13 +19,6 @@ jobs:
       - name: clone the repo
         uses: actions/checkout@v2.3.1
 
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
       - name: map branch 2 test/prod
         run: |
           if [[ ${{ github.ref }} == *master ]]; then
@@ -33,6 +26,21 @@ jobs:
           else
             echo ::set-env name=_ENVIRONMENT::test
           fi
+
+      - name: configure the environment
+        id: configure_environment
+        run: |
+          echo "::set-env name=_STACK_NAME::payola-$_ENVIRONMENT"
+          echo "::set-env name=_GET_BALANCE_HANDLER_NAME::payola-$_ENVIRONMENT-GET_BALANCE_HANDLER"
+          echo "::set-output name=_stack_name::payola-$_ENVIRONMENT"
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
 
       # - name: deploy payola stack
       #   run: |
