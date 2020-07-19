@@ -26,6 +26,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: map branch 2 test/prod
+        run: |
+          if [[ ${{ github.ref }} == *master ]]; then
+            echo ::set-env name=_ENVIRONMENT::test # TODO: revert 2 prod
+          else
+            echo ::set-env name=_ENVIRONMENT::test
+          fi
 
       # - name: deploy payola stack
       #   run: |
