@@ -22,12 +22,10 @@ Metadata:
       - Label:
           default: API
         Parameters:
-          - BasicAuthUsername
-          - BasicAuthPassword
-          - BasicAuthHandlerName
           - FunctionLogRetentionInDays
           - FunctionMemorySize
           - FunctionTimeOut
+          - GetBalanceHandlerName
 
 Parameters:
   Environment:
@@ -126,13 +124,9 @@ Resources:
         DefaultCacheBehavior:
           AllowedMethods:
             - GET
-            - POST
-            - PUT
             - HEAD
           CachedMethods:
             - GET
-            - POST
-            - PUT
             - HEAD
           Compress: True
           DefaultTTL: !Ref DefaultTTL
@@ -162,51 +156,6 @@ Resources:
         - Key: "payola:name"
           Value: !Sub ${AWS::Stackname}-restapi-${Environment}
 
-  BasicAuthHandlerExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Tags:
-        - Key: "payola:name"
-          Value: !Sub ${BasicAuthHandlerName}-executionrole
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Sid: AllowAssumeRoleByLambda
-            Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: BasicAuthHandlerExecutionPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Sid: AllowLogCreation
-                Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: arn:aws:logs:*:*:*
-
-  BasicAuthorizer:
-    Type: AWS::ApiGateway::Authorizer
-    Properties:
-      Name: !Sub ${AWS::StackName}-basicauthorizer
-      AuthorizerUri: !Sub
-        - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BasicAuthHandlerArn}/invocations
-        - BasicAuthHandlerArn: !GetAtt BasicAuthHandler.Arn
-      IdentitySource: method.request.header.authorization
-      IdentityValidationExpression: "^b|Basic\\s+[a-zA-Z0-9-+/_=]+$"
-      RestApiId: !Ref PayolaRestApi
-      Type: TOKEN
-
-  BasicAuthHandlerLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Sub /aws/lambda/${BasicAuthHandler}
-      RetentionInDays: !Ref FunctionLogRetentionInDays
-
   RequestValidator:
     Type: AWS::ApiGateway::RequestValidator
     Properties:
@@ -221,18 +170,18 @@ Resources:
       Name: BalanceResponseModel
       RestApiId: !Ref PayolaRestApi
       ContentType: application/json
-      Schema:
-        $schema: "http://json-schema.org/draft-04/schema#"
-        type: object
-        properties:
-          id:
-            type: string
-          msisdn:
-            type: string
-          amount:
-            type: number
-          currency:
-            type: string
+      # Schema:
+      #   $schema: "http://json-schema.org/draft-04/schema#"
+      #   type: object
+      #   properties:
+      #     id:
+      #       type: string
+      #     msisdn:
+      #       type: string
+      #     amount:
+      #       type: number
+      #     currency:
+      #       type: string
 
   Deployment:
     Type: AWS::ApiGateway::Deployment
@@ -287,28 +236,15 @@ Resources:
               Action:
                 - dynamodb:*
 
-  BasicAuthHandler:
+  GetBalanceHandler:
     Type: AWS::Lambda::Function
     Properties:
       Tags:
         - Key: "payola:name"
-        Value: !Ref BasicAuthHandlerName
-        Code:
-          ZipFile: // dummy
-          Environment:
-            Variables:
-              USERNAME: !Ref BasicAuthUsername
-              PASSWORD: !Ref BasicAuthPassword
-              FunctionName: !Ref BasicAuthHandlerName
-              Handler: main
-              Role: !GetAtt BasicAuthHandlerExecutionRole.Arn
-              Runtime: go1.x
-              MemorySize: !Ref FunctionMemorySize
-              Timeout: !Ref FunctionTimeout
-
-  GetBalanceHandler:
-    Type: AWS::Lambda::Function
-    Properties:
+          Value: !Ref GetBalanceHandlerName
+      Code:
+        S3Bucket: !Ref BucketName # TODO Bucket of bundle
+        S3Key: !Sub ${GetBalanceHandlerName}.zip
       Runtime: go1.x
       Handler: main
       Role: !GetAtt LambdaExecutionRole.Arn

@@ -1,0 +1,47 @@
+name: continous deployment
+
+on: push
+
+env:
+  AWS_REGION: us-east-1
+  CDN_DEFAULT_TTL: 3600
+  CDN_MAX_TTL: 7200
+  CDN_MIN_TTL: 1800
+  CDN_ROOT_OBJECT: ../../dashboard/default.html #  TODO
+  FUNC_MEMORY_SIZE: 120
+  FUNC_TIMEOUT: 3
+  FUNC_LOG_RETENTION_DAYS: 7
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone the repo
+        uses: actions/checkout@v2.3.1
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+
+      # - name: deploy payola stack
+      #   run: |
+      #     aws cloudformation deploy \
+      #       --template-file=../../compute/stack.yml \
+      #       --stack-name=${{ }}
+      #       --parameter-overrides \
+      #         BucketName=${{  }} \
+      #         Environment=${{  }} \
+      #         DefaultRootObject=${{  }} \
+      #         DefaultTTL=${{  }} \
+      #         MaxTTL=${{  }} \
+      #         MinTTL=${{  }} \
+      #         FunctionLogRetentionInDays=${{  }}
+      #         FunctionMemorySize=${{  }} \
+      #         FunctionTimeout=${{  }} \
+      #         GetBalanceHandlerName=${{ }}
+      #       --capabilites=CAPILITY_IAM \
+      #       --no-fail-on-empty-changeset
