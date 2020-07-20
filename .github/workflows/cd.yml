@@ -31,6 +31,7 @@ jobs:
         id: configure_environment
         run: |
           echo "::set-env name=_STACK_NAME::payola-$_ENVIRONMENT"
+          echo "::set-env name=_BUCKET_NAME::payola-$_ENVIRONMENT-bucket"
           echo "::set-env name=_GET_BALANCE_HANDLER_NAME::payola-$_ENVIRONMENT-getbalanceHandler"
           echo "::set-output name=_stack_name::payola-$_ENVIRONMENT"
 
@@ -41,22 +42,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-
-      # - name: deploy payola stack
-      #   run: |
-      #     aws cloudformation deploy \
-      #       --template-file=../../compute/stack.yml \
-      #       --stack-name=${{ }}
-      #       --parameter-overrides \
-      #         BucketName=${{  }} \
-      #         Environment=${{  }} \
-      #         DefaultRootObject=${{  }} \
-      #         DefaultTTL=${{  }} \
-      #         MaxTTL=${{  }} \
-      #         MinTTL=${{  }} \
-      #         FunctionLogRetentionInDays=${{  }}
-      #         FunctionMemorySize=${{  }} \
-      #         FunctionTimeout=${{  }} \
-      #         GetBalanceHandlerName=${{ }}
-      #       --capabilites=CAPILITY_IAM \
-      #       --no-fail-on-empty-changeset
+      - name: deploy payola stack
+        run: |
+          aws cloudformation deploy \
+            --template-file=../../compute/stack.yml \
+            --stack-name=${{ env._STACK_NAME }}
+            --parameter-overrides \
+              BucketName=${{ env._BUCKET_NAME }} \
+              Environment=${{ env._ENVIRONMENT }} \
+              DefaultRootObject=${{ env.CDN_ROOT_OBJECT }} \
+              DefaultTTL=${{ env.CDN_DEFAULT_TTL }} \
+              MaxTTL=${{ env.CDN_MAX_TTL }} \
+              MinTTL=${{ env.CDN_MIN_TTL }} \
+              FunctionLogRetentionInDays=${{ env.FUNC_LOG_RETENTION_DAYS }}
+              FunctionMemorySize=${{ env.FUNC_MEMORY_SIZE }} \
+              FunctionTimeout=${{ env.FUNC_TIMEOUT }} \
+              GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }}
+            --capabilites=CAPILITY_IAM \
+            --no-fail-on-empty-changeset
