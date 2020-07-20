@@ -192,7 +192,7 @@ Resources:
 
   CreateGetBalanceMethod:
     Type: AWS::ApiGateway::Method
-      AuthorizationType: NONE
+      # AuthorizationType: NONE
       # AuthorizerId: !Ref BasicAuthorizer
       HttpMethod: GET
       RequestParameters:
