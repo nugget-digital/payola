@@ -45,7 +45,7 @@ jobs:
       - name: deploy payola stack
         run: |
           aws cloudformation deploy \
-            --template-file=../../compute/stack.yml \
+            --template-file=./compute/stack.yml \
             --stack-name=${{ env._STACK_NAME }}
             --parameter-overrides \
               BucketName=${{ env._BUCKET_NAME }} \
