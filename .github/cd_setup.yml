@@ -3,7 +3,7 @@ Description: |
   Continuous deployment setup providing one user to maintain all payola
   stacks. this template's outputs provide the aws credentials that are
   prerequisites for performing the stack updates. Make sure to manually
-  deploy this stack, then set the github secrets AWS_ACCESS_KEY_ID, 
+  deploy this stack, then set the github secrets AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY given the corresponding stack outputs.
 
 Resources:
@@ -25,7 +25,7 @@ Resources:
               - Sid: AllowStackDescriptionsAndUpdates
                 Effect: Allow
                 Action:
-                  - cloudformation:DescribeStackResources
+                  - cloudformation:DescribeStacks
                   - cloudformation:CreateStack
                   - cloudformation:UpdateStack
                 Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/*

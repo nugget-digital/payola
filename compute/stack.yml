@@ -251,3 +251,8 @@ Resources:
       Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
+
+Outputs:
+  ApiBaseUrl:
+    Description: "API Base URL"
+    Value: !Sub https://${PayolaRestApi}.execute-api.${AWS:Region}.amazonaws.com/${Environment}
