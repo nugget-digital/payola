@@ -22,7 +22,7 @@ jobs:
       - name: map branch 2 test/prod
         run: |
           if [[ ${{ github.ref }} == *master ]]; then
-            echo ::set-env name=_ENVIRONMENT::test # TODO: revert 2 prod
+            echo ::set-env name=_ENVIRONMENT::prod
           else
             echo ::set-env name=_ENVIRONMENT::test
           fi
@@ -58,5 +58,5 @@ jobs:
               FunctionMemorySize=${{ env.FUNC_MEMORY_SIZE }} \
               FunctionTimeout=${{ env.FUNC_TIMEOUT }} \
               GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }}
-            --capabilites=CAPILITY_IAM \
+            --capabilites=CAPABILITY_IAM \
             --no-fail-on-empty-changeset
