@@ -192,8 +192,8 @@ Resources:
 
   CreateGetBalanceMethod:
     Type: AWS::ApiGateway::Method
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref BasicAuthorizer
+      AuthorizationType: NONE # TODO COGNITO_USER_POOLS
+      # AuthorizerId: !Ref BasicAuthorizer
       HttpMethod: GET
       RequestParameters:
         method.request.header.content-type: True
