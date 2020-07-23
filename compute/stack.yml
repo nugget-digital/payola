@@ -227,15 +227,15 @@ Resources:
             Service:
               - lambda.amazonaws.com
           Action: sts:AssumeRole
-    Policies:
-      - PolicyName: LambdaExecutionPolicy
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-            # TODO: narrow down permissions with a lambda exec role for every handler
-              Action:
-                - dynamodb:*
+      Policies:
+        - PolicyName: LambdaExecutionPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+              # TODO: narrow down permissions with a lambda exec role for every handler
+                Action:
+                  - dynamodb:*
 
   GetBalanceHandler:
     Type: AWS::Lambda::Function
