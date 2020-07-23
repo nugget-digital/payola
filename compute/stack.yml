@@ -103,7 +103,7 @@ Resources:
               - s3:GetObject
               - s3:PutObject
             Resource:
-              - !Sub arn:aws:s3:::${Bucket}/*
+              - !GetAtt Bucket.Arn
 
           - Sid: AllowLambdaListBucket
             Effect: Allow
