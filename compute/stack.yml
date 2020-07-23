@@ -74,6 +74,11 @@ Parameters:
     Type: Number
     Default: 7
 
+  GetBalanceHandlerName:
+    Description: Lambda function name for the 'get balance' handler
+    AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
+    Type: String 
+
 Resources:
   Bucket:
     Type: AWS::S3::Bucket
