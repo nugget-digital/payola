@@ -28,6 +28,7 @@ Resources:
                   - cloudformation:DescribeStacks
                   - cloudformation:CreateStack
                   - cloudformation:UpdateStack
+                  - cloudformation:CreateChangeSet
                 Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/*
 
               - Sid: AllowTemplateValidation
