@@ -58,5 +58,5 @@ jobs:
               FunctionMemorySize=${{ env.FUNC_MEMORY_SIZE }} \
               FunctionTimeout=${{ env.FUNC_TIMEOUT }} \
               GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }} \
-            --capabilites=CAPABILITY_IAM \
+            --capabilities=CAPABILITY_IAM \
             --no-fail-on-empty-changeset
