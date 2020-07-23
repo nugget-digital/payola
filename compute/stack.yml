@@ -77,7 +77,7 @@ Parameters:
   GetBalanceHandlerName:
     Description: Lambda function name for the 'get balance' handler
     AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
-    Type: String 
+    Type: String
 
 Resources:
   Bucket:
@@ -156,10 +156,10 @@ Resources:
   PayolaRestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: !Sub ${AWS::Stackname}-restapi-${Environment}
+      Name: !Sub ${AWS::StackName}-restapi-${Environment}
       Tags:
         - Key: "payola:name"
-          Value: !Sub ${AWS::Stackname}-restapi-${Environment}
+          Value: !Sub ${AWS::StackName}-restapi-${Environment}
 
   RequestValidator:
     Type: AWS::ApiGateway::RequestValidator
