@@ -46,7 +46,7 @@ jobs:
         run: |
           aws cloudformation deploy \
             --template-file=./compute/stack.yml \
-            --stack-name=${{ env._STACK_NAME }}
+            --stack-name=${{ env._STACK_NAME }} \
             --parameter-overrides \
               BucketName=${{ env._BUCKET_NAME }} \
               Environment=${{ env._ENVIRONMENT }} \
@@ -54,9 +54,9 @@ jobs:
               DefaultTTL=${{ env.CDN_DEFAULT_TTL }} \
               MaxTTL=${{ env.CDN_MAX_TTL }} \
               MinTTL=${{ env.CDN_MIN_TTL }} \
-              FunctionLogRetentionInDays=${{ env.FUNC_LOG_RETENTION_DAYS }}
+              FunctionLogRetentionInDays=${{ env.FUNC_LOG_RETENTION_DAYS }} \
               FunctionMemorySize=${{ env.FUNC_MEMORY_SIZE }} \
               FunctionTimeout=${{ env.FUNC_TIMEOUT }} \
-              GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }}
+              GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }} \
             --capabilites=CAPABILITY_IAM \
             --no-fail-on-empty-changeset
