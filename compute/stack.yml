@@ -24,7 +24,7 @@ Metadata:
         Parameters:
           - FunctionLogRetentionInDays
           - FunctionMemorySize
-          - FunctionTimeOut
+          - FunctionTimeout
           - GetBalanceHandlerName
 
 Parameters:
@@ -43,7 +43,7 @@ Parameters:
     Type: Number
     Default: 128
 
-  FunctionTimeOut:
+  FunctionTimeout:
     Description: Lambda timeout in seconds
     Type: Number
     Default: 3
