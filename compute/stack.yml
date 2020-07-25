@@ -170,7 +170,7 @@ Resources:
   GasProviderResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      ParentId: !GetAtt RestApi.ResourceId
+      ParentId: !GetAtt RestApi.RootResourceId
       PathPart: gas-provider
       RestApiId: !Ref RestApi
 
