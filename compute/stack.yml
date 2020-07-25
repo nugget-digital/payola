@@ -279,4 +279,4 @@ Resources:
 Outputs:
   ApiBaseUrl:
     Description: "API Base URL"
-    Value: !Sub https://${RestApi}.execute-api.${AWS:Region}.amazonaws.com/${Environment}
+    Value: !Sub https://${RestApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}
