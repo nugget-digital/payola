@@ -184,7 +184,7 @@ Resources:
   BalanceResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      ParentId: !Ref BalanaceResourceCollection
+      ParentId: !Ref BalanceResourceCollection
       PathPart: "{balanceId}"
       RestApiId: !Ref RestApi
 
