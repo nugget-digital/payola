@@ -1,31 +1,31 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Payola API Stack
 
-Metadata:
-  "AWS::Cloudformation::Interface":
-    ParameterGroups:
-      - Label:
-          default: Meta
-        Parameters:
-          - Environment
-      - Label:
-          default: CDN
-        Parameters:
-          - DefaultRootObject
-          - DefaultTTL
-          - MaxTTL
-          - MinTTL
-      - Label:
-          default: Storage
-        Parameters:
-          - BucketName
-      - Label:
-          default: API
-        Parameters:
-          - FunctionLogRetentionInDays
-          - FunctionMemorySize
-          - FunctionTimeout
-          - GetBalanceHandlerName
+# Metadata:
+#   "AWS::Cloudformation::Interface":
+#     ParameterGroups:
+#       - Label:
+#           default: Meta
+#         Parameters:
+#           - Environment
+#       - Label:
+#           default: CDN
+#         Parameters:
+#           - DefaultRootObject
+#           - DefaultTTL
+#           - MaxTTL
+#           - MinTTL
+#       - Label:
+#           default: Storage
+#         Parameters:
+#           - BucketName
+#       - Label:
+#           default: API
+#         Parameters:
+#           - FunctionLogRetentionInDays
+#           - FunctionMemorySize
+#           - FunctionTimeout
+#           - GetBalanceHandlerName
 
 Parameters:
   Environment:
