@@ -196,12 +196,12 @@ Resources:
       PathPart: "{balanceId}"
       RestApiId: !Ref RestApi
 
-  # BalanceResponseModel:
-  #   Type: AWS::ApiGateway::Model
-  #   Properties:
-  #     Name: BalanceResponseModel
-  #     RestApiId: !Ref RestApi
-  #     ContentType: application/json
+  BalanceResponseModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      Name: BalanceResponseModel
+      RestApiId: !Ref RestApi
+      ContentType: application/json
       # Schema:
       #   $schema: "http://json-schema.org/draft-04/schema#"
       #   type: object
@@ -226,31 +226,19 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS:Region}:${AWS::AccountId}:${RestApi}/*
 
-  # CreateGetBalanceMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-      # AuthorizationType: NONE
-      # AuthorizerId: !Ref BasicAuthorizer
-      # HttpMethod: GET
-      # RequestParameters:
-      #   method.request.header.content-type: True
-      #   method.request.body.id: True
-      # RequestValidatorId: !Ref RequestValidator
-      # Integration:
-      #   Type: AWS_PROXY
-      #   IntegrationMethod: GET
-      #   Uri: !Sub
-      #     - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandler.Arn}/invocations
-      #     - LambdaArn: !GetAtt GetBalanceHandler.Arn
-      # MethodResponses:
-        # - ResponseModels:
-        #     "application/json": !Ref BalanceResponseModel
-      #   - StatusCode: "200"
-      #   - StatusCode: "400"
-      #   - StatusCode: "401"
-      #   - StatusCode: "500"
-      # ResourceId: !Ref BalanceResource
-      # RestApiId: !Ref RestApi
+  CreateGetBalanceMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Type: AWS_PROXY
+        IntegrationMethod: GET
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandler.Arn}/invocations
+          - LambdaArn: !GetAtt GetBalanceHandler.Arn
+      ResourceId: !Ref BalanceResource
+      RestApiId: !Ref RestApi
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -280,9 +268,12 @@ Resources:
         - Key: "payola:name"
           Value: !Ref GetBalanceHandlerName
       Code:
-
+        ZipFile: |
+          exports.handler = async () {
+            console.log(JSON.stringify({body: "Hello World!"}))
+          }
       Runtime: node.js
-      Handler: index.getbalancehandler
+      Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
@@ -291,3 +282,7 @@ Outputs:
   ApiBaseUrl:
     Description: "API Base URL"
     Value: !Sub https://${RestApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}
+
+  LambdaArn:
+    Description: "Endpoint of the GetBalanceHandler lambda function"
+    Value: !GetAtt GetBalanceHandler.Arn
