@@ -139,8 +139,8 @@ Resources:
   #           QueryString: False
   #         MaxTTL: !Ref MaxTTL
   #         MinTTL: !Ref MinTTL
-  #         TargetOriginId: BucketOrigin # TODO ?
-  #         ViewerProtocolPolicy: redirect-to-https # TODO ?
+  #         TargetOriginId: BucketOrigin
+  #         ViewerProtocolPolicy: redirect-to-https
   #       DefaultRootObject: !Ref DefaultRootObject
   #       Enabled: True
   #       IPV6Enabled: False
@@ -159,13 +159,13 @@ Resources:
         - Key: "payola:name"
           Value: !Sub ${AWS::StackName}-restapi-${Environment}
 
-  RequestValidator:
-    Type: AWS::ApiGateway::RequestValidator
-    Properties:
-      Name: !Sub ${AWS::StackName}-requestvalidator
-      RestApiId: !Ref RestApi
-      ValidateRequestBody: True
-      ValidateRequestParameters: True
+  # RequestValidator:
+  #   Type: AWS::ApiGateway::RequestValidator
+  #   Properties:
+  #     Name: !Sub ${AWS::StackName}-requestvalidator
+  #     RestApiId: !Ref RestApi
+  #     ValidateRequestBody: True
+  #     ValidateRequestParameters: True
 
   GasProviderResource:
     Type: AWS::ApiGateway::Resource
@@ -220,10 +220,10 @@ Resources:
       # AuthorizationType: NONE
       # AuthorizerId: !Ref BasicAuthorizer
       HttpMethod: GET
-      RequestParameters:
-        method.request.header.content-type: True
-        method.request.body.id: True
-      RequestValidatorId: !Ref RequestValidator
+      # RequestParameters:
+      #   method.request.header.content-type: True
+      #   method.request.body.id: True
+      # RequestValidatorId: !Ref RequestValidator
       Integration:
         Type: AWS_PROXY
         IntegrationMethod: GET
@@ -231,8 +231,8 @@ Resources:
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandler.Arn}/invocations
           - LambdaArn: !GetAtt GetBalanceHandler.Arn
       MethodResponses:
-        - ResponseModels:
-            "application/json": !Ref BalanceResponseModel
+        # - ResponseModels:
+        #     "application/json": !Ref BalanceResponseModel
         - StatusCode: "200"
         - StatusCode: "400"
         - StatusCode: "401"
