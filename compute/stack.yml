@@ -151,6 +151,14 @@ Resources:
   #             OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
   #       PriceClass: PriceClass_100
 
+
+  Deployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: GetBalanceHandler
+    Properties:
+      RestApiId: !Ref RestApi
+      StageName: !Ref Environment
+
   RestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -207,12 +215,16 @@ Resources:
       #     currency:
       #       type: string
 
-  # Deployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   DependsOn: CreateGetBalanceMethod
-  #   Properties:
-  #     RestApiId: !Ref RestApi
-  #     StageName: !Ref Environment
+  GetBalanceHandlerPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - RestApi
+      - GetBalanceHandler
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt GetBalanceHandler.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS:Region}:${AWS::AccountId}:${RestApi}/*
 
   # CreateGetBalanceMethod:
   #   Type: AWS::ApiGateway::Method
@@ -267,9 +279,8 @@ Resources:
       Tags:
         - Key: "payola:name"
           Value: !Ref GetBalanceHandlerName
-      # Code:
-      #   S3Bucket: !Ref BucketName # TODO Bucket of bundle
-      #   S3Key: !Sub ${GetBalanceHandlerName}.zip
+      Code:
+
       Runtime: node.js
       Handler: index.getbalancehandler
       Role: !GetAtt LambdaExecutionRole.Arn
