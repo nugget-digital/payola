@@ -1,31 +1,31 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Payola API Stack
 
-# Metadata:
-#   "AWS::Cloudformation::Interface":
-#     ParameterGroups:
-#       - Label:
-#           default: Meta
-#         Parameters:
-#           - Environment
-#       - Label:
-#           default: CDN
-#         Parameters:
-#           - DefaultRootObject
-#           - DefaultTTL
-#           - MaxTTL
-#           - MinTTL
-#       - Label:
-#           default: Storage
-#         Parameters:
-#           - BucketName
-#       - Label:
-#           default: API
-#         Parameters:
-#           - FunctionLogRetentionInDays
-#           - FunctionMemorySize
-#           - FunctionTimeout
-#           - GetBalanceHandlerName
+Metadata:
+  "AWS::Cloudformation::Interface":
+    ParameterGroups:
+      - Label:
+          default: Meta
+        Parameters:
+          - Environment
+      # - Label:
+      #     default: CDN
+      #   Parameters:
+          # - DefaultRootObject
+          # - DefaultTTL
+          # - MaxTTL
+          # - MinTTL
+      # - Label:
+      #     default: Storage
+      #   Parameters:
+      #     - BucketName
+      - Label:
+          default: API
+        Parameters:
+          # - FunctionLogRetentionInDays
+          - FunctionMemorySize
+          - FunctionTimeout
+          - GetBalanceHandlerName
 
 Parameters:
   Environment:
@@ -48,31 +48,31 @@ Parameters:
     Type: Number
     Default: 3
 
-  DefaultTTL:
-    Description: Default cache object TTL - default 1h
-    Type: Number
-    Default: 3600
+  # DefaultTTL:
+  #   Description: Default cache object TTL - default 1h
+  #   Type: Number
+  #   Default: 3600
+  #
+  # MaxTTL:
+  #   Description: Maximum cache object TTL - default 2h
+  #   Type: Number
+  #   Default: 7200
+  #
+  # MinTTL:
+  #   Description: Minimum cache object TTL - default 1/2h
+  #   Type: Number
+  #   Default: 1800
 
-  MaxTTL:
-    Description: Maximum cache object TTL - default 2h
-    Type: Number
-    Default: 7200
+  # DefaultRootObject:
+  #   Description: Default root object path used by the CloudFront distribution
+  #   AllowedPattern: "^[a-zA-Z0-9_-]+\\.html$"
+  #   Type: String
+  #   Default: index.html
 
-  MinTTL:
-    Description: Minimum cache object TTL - default 1/2h
-    Type: Number
-    Default: 1800
-
-  DefaultRootObject:
-    Description: Default root object path used by the CloudFront distribution
-    AllowedPattern: "^[a-zA-Z0-9_-]+\\.html$"
-    Type: String
-    Default: index.html
-
-  FunctionLogRetentionInDays:
-    Description: Lambda log retention in days
-    Type: Number
-    Default: 7
+  # FunctionLogRetentionInDays:
+  #   Description: Lambda log retention in days
+  #   Type: Number
+  #   Default: 7
 
   GetBalanceHandlerName:
     Description: Lambda function name for the 'get balance' handler
@@ -267,10 +267,10 @@ Resources:
       Tags:
         - Key: "payola:name"
           Value: !Ref GetBalanceHandlerName
-      Code:
-        S3Bucket: !Ref BucketName # TODO Bucket of bundle
-        S3Key: !Sub ${GetBalanceHandlerName}.zip
-      Runtime: go1.x
+      # Code:
+      #   S3Bucket: !Ref BucketName # TODO Bucket of bundle
+      #   S3Key: !Sub ${GetBalanceHandlerName}.zip
+      Runtime: node.js
       Handler: main
       Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize

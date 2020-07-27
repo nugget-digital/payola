@@ -43,7 +43,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
           # TODO: - name: predeploy lambda bundle
-          #         run : 
+          #         run :
 
       - name: deploy payola stack
         run: |
@@ -51,13 +51,7 @@ jobs:
             --template-file=./compute/stack.yml \
             --stack-name=${{ env._STACK_NAME }} \
             --parameter-overrides \
-              BucketName=${{ env._BUCKET_NAME }} \
               Environment=${{ env._ENVIRONMENT }} \
-              DefaultRootObject=${{ env.CDN_ROOT_OBJECT }} \
-              DefaultTTL=${{ env.CDN_DEFAULT_TTL }} \
-              MaxTTL=${{ env.CDN_MAX_TTL }} \
-              MinTTL=${{ env.CDN_MIN_TTL }} \
-              FunctionLogRetentionInDays=${{ env.FUNC_LOG_RETENTION_DAYS }} \
               FunctionMemorySize=${{ env.FUNC_MEMORY_SIZE }} \
               FunctionTimeout=${{ env.FUNC_TIMEOUT }} \
               GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }} \
