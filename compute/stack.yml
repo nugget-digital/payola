@@ -33,10 +33,10 @@ Parameters:
     AllowedPattern: "^(test|prod)$"
     Type: String
 
-  BucketName:
-    Description: S3 bucket name
-    AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
-    Type: String
+  # BucketName:
+  #   Description: S3 bucket name
+  #   AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
+  #   Type: String
 
   FunctionMemorySize:
     Description: how many megabytes of ram to allocate for the lambda
@@ -207,38 +207,38 @@ Resources:
       #     currency:
       #       type: string
 
-  Deployment:
-    Type: AWS::ApiGateway::Deployment
-    DependsOn: CreateGetBalanceMethod
-    Properties:
-      RestApiId: !Ref RestApi
-      StageName: !Ref Environment
+  # Deployment:
+  #   Type: AWS::ApiGateway::Deployment
+  #   DependsOn: CreateGetBalanceMethod
+  #   Properties:
+  #     RestApiId: !Ref RestApi
+  #     StageName: !Ref Environment
 
-  CreateGetBalanceMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
+  # CreateGetBalanceMethod:
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
       # AuthorizationType: NONE
       # AuthorizerId: !Ref BasicAuthorizer
-      HttpMethod: GET
+      # HttpMethod: GET
       # RequestParameters:
       #   method.request.header.content-type: True
       #   method.request.body.id: True
       # RequestValidatorId: !Ref RequestValidator
-      Integration:
-        Type: AWS_PROXY
-        IntegrationMethod: GET
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandler.Arn}/invocations
-          - LambdaArn: !GetAtt GetBalanceHandler.Arn
-      MethodResponses:
+      # Integration:
+      #   Type: AWS_PROXY
+      #   IntegrationMethod: GET
+      #   Uri: !Sub
+      #     - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandler.Arn}/invocations
+      #     - LambdaArn: !GetAtt GetBalanceHandler.Arn
+      # MethodResponses:
         # - ResponseModels:
         #     "application/json": !Ref BalanceResponseModel
-        - StatusCode: "200"
-        - StatusCode: "400"
-        - StatusCode: "401"
-        - StatusCode: "500"
-      ResourceId: !Ref BalanceResource
-      RestApiId: !Ref RestApi
+      #   - StatusCode: "200"
+      #   - StatusCode: "400"
+      #   - StatusCode: "401"
+      #   - StatusCode: "500"
+      # ResourceId: !Ref BalanceResource
+      # RestApiId: !Ref RestApi
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -271,7 +271,7 @@ Resources:
       #   S3Bucket: !Ref BucketName # TODO Bucket of bundle
       #   S3Key: !Sub ${GetBalanceHandlerName}.zip
       Runtime: node.js
-      Handler: main
+      Handler: index.getbalancehandler
       Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
