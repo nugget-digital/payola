@@ -7,7 +7,6 @@ env:
   CDN_DEFAULT_TTL: 3600
   CDN_MAX_TTL: 7200
   CDN_MIN_TTL: 1800
-  CDN_ROOT_OBJECT: index.html
   FUNC_MEMORY_SIZE: 120
   FUNC_TIMEOUT: 3
   FUNC_LOG_RETENTION_DAYS: 7
@@ -56,4 +55,5 @@ jobs:
               FunctionTimeout=${{ env.FUNC_TIMEOUT }} \
               GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }} \
             --capabilities=CAPABILITY_IAM \
-            --no-fail-on-empty-changeset
+            --no-fail-on-empty-changeset \
+            --debug
