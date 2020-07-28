@@ -269,8 +269,9 @@ Resources:
           Value: !Ref GetBalanceHandlerName
       Code:
         ZipFile: |
-          exports.handler = async () {
-            console.log(JSON.stringify({body: "Hello World!"}))
+          exports.handler = async function () {
+            var response = JSON.stringify({body: "Hello World!"}))
+            return response
           }
       Runtime: node.js
       Handler: index.handler
