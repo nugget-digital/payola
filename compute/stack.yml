@@ -115,7 +115,7 @@ Resources:
       Code:
         ZipFile: |
           exports.handler = async function () {
-            var response = JSON.stringify({body: "Hello World!"}))
+            var response = JSON.stringify({body: "Hello World!"})
             return response
           }
       Runtime: node.js
