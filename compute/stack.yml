@@ -8,21 +8,9 @@ Metadata:
           default: Meta
         Parameters:
           - Environment
-      # - Label:
-      #     default: CDN
-      #   Parameters:
-          # - DefaultRootObject
-          # - DefaultTTL
-          # - MaxTTL
-          # - MinTTL
-      # - Label:
-      #     default: Storage
-      #   Parameters:
-      #     - BucketName
       - Label:
           default: API
         Parameters:
-          # - FunctionLogRetentionInDays
           - FunctionMemorySize
           - FunctionTimeout
           - GetBalanceHandlerName
@@ -32,11 +20,6 @@ Parameters:
     Description: Environment name - test/prod
     AllowedPattern: "^(test|prod)$"
     Type: String
-
-  # BucketName:
-  #   Description: S3 bucket name
-  #   AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
-  #   Type: String
 
   FunctionMemorySize:
     Description: how many megabytes of ram to allocate for the lambda
@@ -48,109 +31,12 @@ Parameters:
     Type: Number
     Default: 3
 
-  # DefaultTTL:
-  #   Description: Default cache object TTL - default 1h
-  #   Type: Number
-  #   Default: 3600
-  #
-  # MaxTTL:
-  #   Description: Maximum cache object TTL - default 2h
-  #   Type: Number
-  #   Default: 7200
-  #
-  # MinTTL:
-  #   Description: Minimum cache object TTL - default 1/2h
-  #   Type: Number
-  #   Default: 1800
-
-  # DefaultRootObject:
-  #   Description: Default root object path used by the CloudFront distribution
-  #   AllowedPattern: "^[a-zA-Z0-9_-]+\\.html$"
-  #   Type: String
-  #   Default: index.html
-
-  # FunctionLogRetentionInDays:
-  #   Description: Lambda log retention in days
-  #   Type: Number
-  #   Default: 7
-
   GetBalanceHandlerName:
     Description: Lambda function name for the 'get balance' handler
     AllowedPattern: "^[a-z0-9]+[a-z0-9-]+[a-z0-9]+$"
     Type: String
 
 Resources:
-  # Bucket:
-  #   Type: AWS::S3::Bucket
-  #   Properties:
-  #     Tags:
-  #       - Key: "payola:name"
-  #         Value: !Sub ${BucketName}-${Environment}
-  #     BucketName: !Sub ${BucketName}-${Environment}
-  #
-  # BucketPolicy:
-  #   Type: AWS::S3::BucketPolicy
-  #   Properties:
-  #     Bucket: !Ref Bucket
-  #     PolicyDocument:
-  #       Version: 2012-10-17
-  #       Statement:
-  #         - Sid: AllowLambdaGetPutObject
-  #           Effect: Allow
-  #           Principal:
-  #             AWS: !GetAtt LambdaExecutionRole.Arn
-  #           Action:
-  #             - s3:GetObject
-  #             - s3:PutObject
-  #           Resource: !Sub arn:aws:s3:::${Bucket}/*
-  #
-  #         - Sid: AllowLambdaListBucket
-  #           Effect: Allow
-  #           Principal:
-  #             AWS: !GetAtt LambdaExecutionRole.Arn
-  #           Action: s3:ListBucket
-  #           Resource: !GetAtt Bucket.Arn
-  #
-  # OriginAccessIdentity:
-  #   Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
-  #   Properties:
-  #     CloudFrontOriginAccessIdentityConfig:
-  #       Comment: !Sub ${AWS::StackName}-aaaa # required
-
-  # Distribution:
-  #   Type: AWS::CloudFront::Distribution
-  #   Properties:
-  #     Tags:
-  #       - Key: "payola:name"
-  #         Value: !Sub ${AWS::StackName}-distribution
-  #     DistributionConfig:
-  #       DefaultCacheBehavior:
-  #         AllowedMethods:
-  #           - GET
-  #           - HEAD
-  #         CachedMethods:
-  #           - GET
-  #           - HEAD
-  #         Compress: True
-  #         DefaultTTL: !Ref DefaultTTL
-  #         ForwardedValues:
-  #           Cookies:
-  #             Forward: none
-  #           QueryString: False
-  #         MaxTTL: !Ref MaxTTL
-  #         MinTTL: !Ref MinTTL
-  #         TargetOriginId: BucketOrigin
-  #         ViewerProtocolPolicy: redirect-to-https
-  #       DefaultRootObject: !Ref DefaultRootObject
-  #       Enabled: True
-  #       IPV6Enabled: False
-  #       Origins:
-  #         - DomainName: !GetAtt Bucket.DomainName
-  #           Id: BucketOrigin
-  #           S3OriginConfig:
-  #             OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
-  #       PriceClass: PriceClass_100
-
 
   Deployment:
     Type: AWS::ApiGateway::Deployment
@@ -167,53 +53,12 @@ Resources:
         - Key: "payola:name"
           Value: !Sub ${AWS::StackName}-restapi-${Environment}
 
-  # RequestValidator:
-  #   Type: AWS::ApiGateway::RequestValidator
-  #   Properties:
-  #     Name: !Sub ${AWS::StackName}-requestvalidator
-  #     RestApiId: !Ref RestApi
-  #     ValidateRequestBody: True
-  #     ValidateRequestParameters: True
-
-  GasProviderResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !GetAtt RestApi.RootResourceId
-      PathPart: gas-provider
-      RestApiId: !Ref RestApi
-
-  BalanceResourceCollection:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !Ref GasProviderResource
-      PathPart: balance
-      RestApiId: !Ref RestApi
-
   BalanceResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      ParentId: !Ref BalanceResourceCollection
-      PathPart: "{balanceId}"
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: balance
       RestApiId: !Ref RestApi
-
-  BalanceResponseModel:
-    Type: AWS::ApiGateway::Model
-    Properties:
-      Name: BalanceResponseModel
-      RestApiId: !Ref RestApi
-      ContentType: application/json
-      # Schema:
-      #   $schema: "http://json-schema.org/draft-04/schema#"
-      #   type: object
-      #   properties:
-      #     id:
-      #       type: string
-      #     msisdn:
-      #       type: string
-      #     amount:
-      #       type: number
-      #     currency:
-      #       type: string
 
   GetBalanceHandlerPermission:
     Type: AWS::Lambda::Permission
