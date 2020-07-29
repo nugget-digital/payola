@@ -37,7 +37,7 @@ Parameters:
     Type: String
 
 Resources:
-  # 
+  #
   # Deployment:
   #   Type: AWS::ApiGateway::Deployment
   #   DependsOn: GetBalanceHandler
