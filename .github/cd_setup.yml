@@ -31,7 +31,6 @@ Resources:
                   - cloudformation:CreateChangeSet
                   - cloudformation:DescribeChangeSet
                   - cloudformation:ExecuteChangeSet
-
                 Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/*
 
               - Sid: AllowTemplateValidation
@@ -39,6 +38,15 @@ Resources:
                 Action: cloudformation:ValidateTemplate
                 Resource: "*"
 
+              - Sid: AllowApiGatewayMethods
+                Effect: Allow
+                Action: apigateway:POST
+                Resource: "*"
+
+              - Sid: AllowIamRoleCreation
+                Effect: Allow
+                Action: iam:CreateRole
+                Resource: "*"
   AccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
