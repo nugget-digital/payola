@@ -40,13 +40,16 @@ Resources:
 
               - Sid: AllowApiGatewayMethods
                 Effect: Allow
-                Action: apigateway:POST
+                Action:
+                  - apigateway:POST
+                  - apigateway:DELETE
                 Resource: "*"
 
               - Sid: AllowIamRoleCreation
                 Effect: Allow
                 Action: iam:CreateRole
                 Resource: "*"
+
   AccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
