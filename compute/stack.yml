@@ -93,8 +93,7 @@ Resources:
         Statement:
         - Effect: Allow
           Prinipal:
-            Service:
-              - lambda.amazonaws.com
+            Service: lambda.amazonaws.com
           Action: sts:AssumeRole
       Policies:
         - PolicyName: LambdaExecutionPolicy
