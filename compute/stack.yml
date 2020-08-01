@@ -104,6 +104,8 @@ Resources:
               # TODO: narrow down permissions with a lambda exec role for every handler
                 Action:
                   - dynamodb:*
+                  - lambda:*
+                Resource: "*"
 
   GetBalanceHandler:
     Type: AWS::Lambda::Function

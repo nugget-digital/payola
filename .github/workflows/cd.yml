@@ -55,5 +55,4 @@ jobs:
               FunctionTimeout=${{ env.FUNC_TIMEOUT }} \
               GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }} \
             --capabilities=CAPABILITY_IAM \
-            --no-fail-on-empty-changeset \
-            --debug
+            --no-fail-on-empty-changeset

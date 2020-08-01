@@ -48,7 +48,7 @@ Resources:
 
               - Sid: AllowIamRoleCreation
                 Effect: Allow
-                Action: iam:CreateRole
+                Action: iam:*
                 Resource: "*"
 
   AccessKey:
