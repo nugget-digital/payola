@@ -119,7 +119,7 @@ Resources:
             var response = JSON.stringify({body: "Hello World!"})
             return response
           }
-      Runtime: node.js
+      Runtime: nodejs12.x
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
