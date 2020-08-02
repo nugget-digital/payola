@@ -20,6 +20,7 @@ Resources:
                 Action:
                   - lambda:UpdateFunctionCode
                   - lambda:PublishVersion
+                  - lambda:CreateFunction
                 Resource: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*
 
               - Sid: AllowStackDescriptionsAndUpdates
