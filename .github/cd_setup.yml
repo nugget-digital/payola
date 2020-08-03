@@ -21,6 +21,9 @@ Resources:
                   - lambda:UpdateFunctionCode
                   - lambda:PublishVersion
                   - lambda:CreateFunction
+                  - lambda:DeleteFunction
+                  - lambda:GetFunction
+                  - lambda:GetFunctionConfiguration
                 Resource: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*
 
               - Sid: AllowStackDescriptionsAndUpdates
