@@ -78,7 +78,7 @@ Resources:
       HttpMethod: GET
       Integration:
         Type: AWS_PROXY
-        IntegrationMethod: GET
+        IntegrationHttpMethod: GET
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandler.Arn}/invocations
           - LambdaArn: !GetAtt GetBalanceHandler.Arn
