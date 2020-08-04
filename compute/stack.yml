@@ -37,13 +37,6 @@ Parameters:
     Type: String
 
 Resources:
-  #
-  # Deployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   DependsOn: GetBalanceHandler
-  #   Properties:
-  #     RestApiId: !Ref RestApi
-  #     StageName: !Ref Environment
 
   RestApi:
     Type: AWS::ApiGateway::RestApi

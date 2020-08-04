@@ -24,6 +24,7 @@ Resources:
                   - lambda:DeleteFunction
                   - lambda:GetFunction
                   - lambda:GetFunctionConfiguration
+                  - lambda:AddPermission
                 Resource: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*
 
               - Sid: AllowStackDescriptionsAndUpdates

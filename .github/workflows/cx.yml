@@ -1,0 +1,82 @@
+name: cx
+
+on: push
+
+env:
+  AWS_REGION: us-east-1
+  FUNC_MEMORY_SIZE: 128
+  FUNC_TIMEOUT: 3
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      CFN_TEMPLATES: "stack.yml\n.github/cd_setup.yml\n"
+      OPEN_API_SPEC: compute/openapi.yml
+    steps:
+      - name: clone the repo
+        uses: actions/checkout@v2.3.1
+
+      - uses: aws-actions/configure-aws-credentials@v1.4.2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: validate the open api spec
+        uses: mpetrunic/swagger-cli-action@v1.0.0
+        with:
+          command: "validate ${{ env.OPEN_API_SPEC }}"
+
+      - name: validate all cloudformation templates
+        run: |
+          printf "${{ env.CFN_TEMPLATES }}" | while read template; do
+            aws cloudformation validate-template \
+              --template-body="file://$template"
+          done
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: clone the repo
+        uses: actions/checkout@v2.3.1
+
+      - name: map branch 2 test/prod
+        run: |
+          if [[ ${{ github.ref }} == *master ]]; then
+            echo ::set-env name=_ENVIRONMENT::test
+          else
+            echo ::set-env name=_ENVIRONMENT::test
+          fi
+        # TODO: Revert back to prod 
+      - name: configure the environment
+        id: configure_environment
+        run: |
+          echo "::set-env name=_STACK_NAME::payola-$_ENVIRONMENT"
+          echo "::set-env name=_BUCKET_NAME::payola-$_ENVIRONMENT-bucket"
+          echo "::set-env name=_GET_BALANCE_HANDLER_NAME::payola-$_ENVIRONMENT-getbalancehandler"
+          echo "::set-output name=_stack_name::payola-$_ENVIRONMENT"
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+          # TODO: - name: predeploy lambda bundle
+          #         run :
+
+      - name: deploy payola stack
+        run: |
+          aws cloudformation deploy \
+            --template-file=./compute/stack.yml \
+            --stack-name=${{ env._STACK_NAME }} \
+            --parameter-overrides \
+              Environment=${{ env._ENVIRONMENT }} \
+              FunctionMemorySize=${{ env.FUNC_MEMORY_SIZE }} \
+              FunctionTimeout=${{ env.FUNC_TIMEOUT }} \
+              GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }} \
+            --capabilities=CAPABILITY_IAM \
+            --no-fail-on-empty-changeset
