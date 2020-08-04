@@ -11,7 +11,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     env:
-      CFN_TEMPLATES: "stack.yml\n.github/cd_setup.yml\n"
+      CFN_TEMPLATES: "./compute/stack.yml\n.github/cd_setup.yml\n"
       OPEN_API_SPEC: compute/openapi.yml
     steps:
       - name: clone the repo
@@ -49,7 +49,7 @@ jobs:
           else
             echo ::set-env name=_ENVIRONMENT::test
           fi
-        # TODO: Revert back to prod 
+        # TODO: Revert back to prod
       - name: configure the environment
         id: configure_environment
         run: |
