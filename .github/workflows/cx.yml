@@ -80,3 +80,21 @@ jobs:
               GetBalanceHandlerName=${{ env._GET_BALANCE_HANDLER_NAME }} \
             --capabilities=CAPABILITY_IAM \
             --no-fail-on-empty-changeset
+
+  test:
+    runs-on: ubuntu-latest
+    needs:
+      - validate
+      - deploy
+    steps:
+      - uses: actions/checkout@v2.3.1
+      - name: fetch stack outputs
+        run: |
+          api_base_url="$( \
+            aws cloudformation describe-stacks \
+              --stack-name="${{ needs.deploy.outputs._stack_name }}" \
+              --query="Stacks[0].Outputs[?OutputKey=='ApiBaseURL'].OutputValue" \
+              --output=text \
+          )"
+
+          echo "::set-env name=_BASE_URL::$api_base_url"
