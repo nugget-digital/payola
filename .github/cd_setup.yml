@@ -37,7 +37,7 @@ Resources:
                   - cloudformation:DescribeChangeSet
                   - cloudformation:ExecuteChangeSet
                   - cloudformation:GetTemplateSummary
-                Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/*
+                Resource: "*"
 
               - Sid: AllowTemplateValidation
                 Effect: Allow
