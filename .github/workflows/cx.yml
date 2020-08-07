@@ -46,10 +46,10 @@ jobs:
         run: |
           if [[ ${{ github.ref }} == *master ]]; then
             echo ::set-env name=_ENVIRONMENT::test
-        # TODO: Revert back to prod
           else
             echo ::set-env name=_ENVIRONMENT::test
           fi
+        # TODO: Revert back to prod
       - name: configure the environment
         id: configure_environment
         run: |
@@ -58,7 +58,6 @@ jobs:
           echo "::set-env name=_GET_BALANCE_HANDLER_NAME::payola-$_ENVIRONMENT-getbalancehandler"
           echo "::set-output name=_stack_name::payola-$_ENVIRONMENT"
           echo output._stack_name
-
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
