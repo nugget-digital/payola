@@ -57,7 +57,7 @@ jobs:
           echo "::set-env name=_BUCKET_NAME::payola-$_ENVIRONMENT-bucket"
           echo "::set-env name=_GET_BALANCE_HANDLER_NAME::payola-$_ENVIRONMENT-getbalancehandler"
           echo "::set-output name=_stack_name::payola-$_ENVIRONMENT"
-          echo output._stack_name
+          echo "$output._stack_name"
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
