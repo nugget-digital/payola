@@ -43,23 +43,24 @@ lurc() {
   curl -s --proto '=https' --tlsv1.2 "$@"
 }
 
-test_documents_read_200() {
-  printf "test_documents_read_200\n"
+test_balance_get_200() {
+  printf "test_balance_get_200\n"
 
   # resp_head="$(mktemp)"
-  # resp_body="$(mktemp)"
+  resp_body="$(mktemp)"
   #
   # document_id="api-test-document-$(date +%s%N)"
   #
-  # lurc \
-  #   -X PUT \
-  #   -H "content-type: text/html" \
-  #   -H "authorization: Bearer $_ACCESS_TOKEN" \
-  #   --data @./test/fixtures/good_document.html \
-  #   -D "$resp_head" \
-  #   "$_BASE_URL/documents/$document_id"
-  #
-  # assert_status "$resp_head" 204
+  lurc \
+    -X GET \
+    -H "content-type: text/html" \
+    # -H "authorization: Bearer $_ACCESS_TOKEN" \
+    # --data @./test/fixtures/good_document.html \
+    -D "$resp_body" \
+    "$_BASE_URL/balance"
+
+  echo $resp_body
+  # assert_status "$resp_body" ''
   #
   # lurc \
   #   -X GET \

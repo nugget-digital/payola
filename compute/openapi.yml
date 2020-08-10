@@ -47,7 +47,7 @@ paths:
           description: not found
         500:
           description: internal server error
-  /claim/store/{id,msisdn,amount,currency}:
+  /claim/{id,msisdn,amount,currency}:
     put:
       summary: update a claim
       parameters:

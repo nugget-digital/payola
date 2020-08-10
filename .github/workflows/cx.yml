@@ -111,4 +111,4 @@ jobs:
       - name: api testing
         run: |
           source test/test_spec.sh
-          test_documents_read_200
+          test_balance_get_200

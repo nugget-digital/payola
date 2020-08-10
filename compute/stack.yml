@@ -37,7 +37,6 @@ Parameters:
     Type: String
 
 Resources:
-
   RestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
