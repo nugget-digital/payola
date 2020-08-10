@@ -96,7 +96,7 @@ jobs:
 
       - name: print env stack name
         run: |
-          echo ${{ needs.deploy.outputs }}
+          echo ${{ needs.deploy.outputs._stack_name }}
 
       - name: fetch stack outputs
         run: |
