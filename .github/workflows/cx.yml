@@ -57,7 +57,6 @@ jobs:
           echo "::set-env name=_BUCKET_NAME::payola-$_ENVIRONMENT-bucket"
           echo "::set-env name=_GET_BALANCE_HANDLER_NAME::payola-$_ENVIRONMENT-getbalancehandler"
           echo "::set-output name=_stack_name::payola-$_ENVIRONMENT"
-          echo "$output._stack_name"
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -94,6 +93,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: print env stack name
+        run: |
+          echo needs.deploy.outputs
 
       - name: fetch stack outputs
         run: |
