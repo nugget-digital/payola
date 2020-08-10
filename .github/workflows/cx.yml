@@ -95,7 +95,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: print env stack name
+      - name: get _stack_name
         run: |
           echo ${{ needs.deploy.outputs._stack_name }}
 
