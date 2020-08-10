@@ -97,10 +97,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: get _stack_name from deployment step
-        run: |
-          echo ${{ needs.deploy.outputs._stack_name }}
-
       - name: fetch stack outputs
         run: |
           api_base_url="$( \
@@ -111,3 +107,8 @@ jobs:
           )"
 
           echo "::set-env name=_BASE_URL::$api_base_url"
+
+      - name: api testing
+        run: |
+          source test/test_spec.sh
+          test_documents_read_200
