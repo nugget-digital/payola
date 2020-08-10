@@ -38,6 +38,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: validate
+    outputs:
+      _stack_name: ${{ steps.configure_environment.outputs._stack_name }}
     steps:
       - name: clone the repo
         uses: actions/checkout@v2.3.1
@@ -95,7 +97,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: get _stack_name
+      - name: get _stack_name from deployment step
         run: |
           echo ${{ needs.deploy.outputs._stack_name }}
 
