@@ -111,5 +111,5 @@ jobs:
       - name: api testing
         run: |
           printf "$_BASE_URL"
-          source test/test_spec.sh
+          source ./test/test_spec.sh
           test_balance_get_200

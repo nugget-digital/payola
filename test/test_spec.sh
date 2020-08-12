@@ -53,13 +53,13 @@ test_balance_get_200() {
   #
   lurc \
     -X GET \
-    -H "content-type: text/html" \
+    # -H "content-type: text/html" \
     # -H "authorization: Bearer $_ACCESS_TOKEN" \
     # --data @./test/fixtures/good_document.html \
     -D "$resp_body" \
     "$_BASE_URL/balance"
 
-  echo $resp_body
+  # echo $resp_body
   # assert_status "$resp_body" ''
   #
   # lurc \
