@@ -45,16 +45,16 @@ lurc() {
 
 test_balance_get_200() {
   printf "test_balance_get_200\n"
-  printf $_BASE_URL
+  printf "$_BASE_URL"
   # resp_head="$(mktemp)"
   # resp_body="$(mktemp)"
   #
   # document_id="api-test-document-$(date +%s%N)"
   #
-  lurc \
-    -X "GET" \
-    # -D "$resp_body" \
-    "$_BASE_URL/balance"
+  # lurc \
+  #   -X "GET" \
+  #   -D "$resp_body" \
+  #   "$_BASE_URL/balance"
 
   # echo $resp_body
   # assert_status "$resp_body" ''
