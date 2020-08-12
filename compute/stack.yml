@@ -118,7 +118,7 @@ Resources:
       Timeout: !Ref FunctionTimeout
 
 Outputs:
-  ApiBaseUrl:
+  ApiBaseURL:
     Description: "API Base URL"
     Value: !Sub https://${RestApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}
 
