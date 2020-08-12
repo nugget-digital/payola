@@ -106,7 +106,6 @@ jobs:
               --output=text \
           )"
           echo "::set-env name=_BASE_URL::$api_base_url"
-          printf "$api_base_url"
 
       - name: api testing
         run: |
