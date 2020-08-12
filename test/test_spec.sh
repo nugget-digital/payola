@@ -46,38 +46,4 @@ lurc() {
 test_balance_get_200() {
   printf "test_balance_get_200\n"
   printf "$_BASE_URL"
-  # resp_head="$(mktemp)"
-  # resp_body="$(mktemp)"
-  #
-  # document_id="api-test-document-$(date +%s%N)"
-  #
-  # lurc \
-  #   -X "GET" \
-  #   -D "$resp_body" \
-  #   "$_BASE_URL/balance"
-
-  # echo $resp_body
-  # assert_status "$resp_body" ''
-  #
-  # lurc \
-  #   -X GET \
-  #   -H "authorization: Bearer $_ACCESS_TOKEN" \
-  #   -D "$resp_head" \
-  #   "$_BASE_URL/documents/$document_id" \
-  # > "$resp_body"
-  #
-  # assert_status "$resp_head" 200
-  #
-  # name="$(jq -r '.document.name' "$resp_body")"
-  # lastModified="$(jq -r '.document.lastModified' "$resp_body")"
-  # size=$(jq -r '.document.size' "$resp_body")
-  # content="$(jq -r '.document.content' "$resp_body")"
-  #
-  # assert_equal "$name" "$document_id"
-  #
-  # assert_match "$lastModified" '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$'
-  #
-  # assert_match "$size" '^[0-9]+$'
-  #
-  # assert_match "$content" '^<!doctype html>.+'
 }
