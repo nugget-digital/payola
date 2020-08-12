@@ -45,17 +45,14 @@ lurc() {
 
 test_balance_get_200() {
   printf "test_balance_get_200\n"
-
+  printf $_BASE_URL
   # resp_head="$(mktemp)"
-  resp_body="$(mktemp)"
+  # resp_body="$(mktemp)"
   #
   # document_id="api-test-document-$(date +%s%N)"
   #
   lurc \
-    -X GET \
-    # -H "content-type: text/html" \
-    # -H "authorization: Bearer $_ACCESS_TOKEN" \
-    # --data @./test/fixtures/good_document.html \
+    -X "GET" \
     # -D "$resp_body" \
     "$_BASE_URL/balance"
 
