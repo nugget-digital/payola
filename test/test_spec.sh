@@ -50,7 +50,7 @@ test_balance_get_200() {
 
   lurc \
     -X "GET" \
-    # -D "$resp_head" \
+    -D "$resp_head" \
     "$_BASE_URL/balance"
   > "$resp_body"
 
