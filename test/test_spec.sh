@@ -49,11 +49,11 @@ test_balance_get_200() {
   resp_body="$(mktemp)"
 
   lurc \
-    -X "GET" \
-    -D "$resp_head" \
+    -X GET \
+    # -D "$resp_head" \
     "$_BASE_URL/balance"
   > "$resp_body"
 
-  printf "$resp_head"
+  # printf "$resp_head"
   printf "$resp_body"
 }
