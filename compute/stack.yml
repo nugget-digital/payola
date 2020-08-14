@@ -76,7 +76,7 @@ Resources:
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandlerArn}/invocations
           - GetBalanceHandlerArn: !GetAtt GetBalanceHandler.Arn
       MethodResponses:
-          StatusCode: "200"
+        - StatusCode: "200"
         - StatusCode: "400"
         - StatusCode: "401"
         - StatusCode: "404"
