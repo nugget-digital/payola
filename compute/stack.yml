@@ -46,6 +46,23 @@ Resources:
           Value: !Sub ${AWS::StackName}-restapi-${Environment}
 
   BalanceResource:
+Description: Payola API Stack
+
+Metadata:
+  "AWS::Cloudformation::Interface":
+    ParameterGroups:
+      - Label:
+          default: Meta
+        Parameters:
+          - Environment
+      - Label:
+          default: API
+        Parameters:
+          - FunctionMemorySize
+          - FunctionTimeout
+          - GetBalanceHandlerName
+
+Parameters:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt RestApi.RootResourceId
@@ -66,6 +83,7 @@ Resources:
   CreateGetBalanceMethod:
     Type: AWS::ApiGateway::Method
     Properties:
+      ApiKeyRequired: false
       AuthorizationType: NONE
       HttpMethod: GET
       Integration:
