@@ -73,10 +73,18 @@ Resources:
         Type: AWS_PROXY
         IntegrationHttpMethod: GET
         Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandler.Arn}/invocations
-          - LambdaArn: !GetAtt GetBalanceHandler.Arn
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBalanceHandlerArn}/invocations
+          - GetBalanceHandlerArn: !GetAtt GetBalanceHandler.Arn
+      MethodResponses:
+          StatusCode: "200"
+        - StatusCode: "400"
+        - StatusCode: "401"
+        - StatusCode: "404"
+        - StatusCode: "500"
       ResourceId: !Ref BalanceResource
       RestApiId: !Ref RestApi
+
+
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
