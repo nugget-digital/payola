@@ -54,6 +54,6 @@ test_balance_get_200() {
     "$_BASE_URL/balance"
   > "$resp_body"
 
-  # printf "$resp_head"
+  printf "$resp_head"
   printf "$resp_body"
 }
