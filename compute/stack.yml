@@ -61,7 +61,7 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !GetAtt GetBalanceHandler.Arn
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*
 
   CreateGetBalanceMethod:
     Type: AWS::ApiGateway::Method
@@ -83,8 +83,6 @@ Resources:
         - StatusCode: "500"
       ResourceId: !Ref BalanceResource
       RestApiId: !Ref RestApi
-
-
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role

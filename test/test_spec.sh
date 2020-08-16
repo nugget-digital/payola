@@ -55,5 +55,5 @@ test_balance_get_200() {
   > "$resp_body"
 
   cat "$resp_head"
-  printf "$resp_body"
+  cat "$resp_body"
 }
