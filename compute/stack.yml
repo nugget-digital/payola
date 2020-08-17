@@ -11,6 +11,7 @@ Metadata:
       - Label:
           default: API
         Parameters:
+          - FunctionLogRetentionInDays
           - FunctionMemorySize
           - FunctionTimeout
           - GetBalanceHandlerName
@@ -20,6 +21,11 @@ Parameters:
     Description: Environment name - test/prod
     AllowedPattern: "^(test|prod)$"
     Type: String
+
+  FunctionLogRetentionInDays:
+    Description: Lambda log retention in days
+    Type: Number
+    Default: 7
 
   FunctionMemorySize:
     Description: how many megabytes of ram to allocate for the lambda
@@ -123,6 +129,13 @@ Resources:
       Role: !GetAtt LambdaExecutionRole.Arn
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
+
+
+  GetBalanceHandlerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${GetBalanceHandlerName}
+      RetentionInDays: !Ref FunctionLogRetentionInDays
 
 Outputs:
   ApiBaseURL:
