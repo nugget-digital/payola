@@ -110,6 +110,7 @@ Resources:
                 Action:
                   - dynamodb:*
                   - lambda:*
+                  - logs:*
                 Resource: "*"
 
   GetBalanceHandler:
