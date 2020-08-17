@@ -87,7 +87,7 @@ Resources:
         - StatusCode: "401"
         - StatusCode: "404"
         - StatusCode: "500"
-      ResourceId: !Ref BalanceResource
+      ResourceId: !GetAtt RestApi.RootResourceId
       RestApiId: !Ref RestApi
 
   LambdaExecutionRole:
