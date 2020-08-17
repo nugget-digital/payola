@@ -56,6 +56,11 @@ Resources:
                 Action: iam:*
                 Resource: "*"
 
+              - Sid: AllowLogActions
+                Effect: Allow
+                Action: logs:*
+                Resource: "*"
+
   AccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
