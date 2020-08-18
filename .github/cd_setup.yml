@@ -24,7 +24,9 @@ Resources:
                   - iam:*
                   - logs:*
                   - cloudfront:*
-                  
+                Resource:
+                  - "*"
+
   AccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
