@@ -87,7 +87,7 @@ Resources:
         - StatusCode: "401"
         - StatusCode: "404"
         - StatusCode: "500"
-      ResourceId: !GetAtt RestApi.RootResourceId
+      ResourceId: !Ref BalanceResource
       RestApiId: !Ref RestApi
 
   LambdaExecutionRole:
@@ -131,7 +131,7 @@ Resources:
       MemorySize: !Ref FunctionMemorySize
       Timeout: !Ref FunctionTimeout
 
-  # 
+  #
   # GetBalanceHandlerLogGroup:
   #   Type: AWS::Logs::LogGroup
   #   Properties:
