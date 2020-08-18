@@ -55,5 +55,6 @@ test_balance_get_200() {
   > "$resp_body"
 
   cat "$resp_head"
+  assert_status "$resp_head" 200
   cat "$resp_body"
 }
